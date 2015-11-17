@@ -1,0 +1,59 @@
+{
+	"ver": "0.0.1",
+	
+	"authors": [
+		"msneddon"
+	],
+	"contact": "help@kbase.us",
+	"visible": true,
+	"categories": ["active"],
+	"widgets": {
+		"input": null,
+		"output": null
+	},
+	"parameters": [ 
+		{
+			"id": "contigset_id",
+			"optional": false,
+			"advanced": false,
+			"allow_multiple": false,
+			"default_values": [ "" ],
+			"field_type": "text",
+			"text_options": {
+				"valid_ws_types": ["KBaseGenomes.ContigSet"]
+			}
+		}
+	],
+	"behavior": {
+		"service-mapping": {
+			"url": "",
+			"name": "MegaHit",
+			"method": "count_contigs",
+			"input_mapping": [
+				{
+					"narrative_system_variable": "workspace",
+					"target_argument_position": 0
+				},
+				{
+					"input_parameter": "contigset_id",
+					"target_argument_position": 1
+				}
+			],
+			"output_mapping": [
+				{
+					"service_method_output_path": [0, "contig_count"],
+					"target_property": "contigCount"
+				},
+				{
+					"input_parameter": "contigset_id",
+					"target_property": "contigsetId"
+				},
+				{
+					"narrative_system_variable": "workspace",
+					"target_property": "workspaceName"
+				}
+			]
+		}
+	},
+	"job_id_output_field": "docker"
+}
