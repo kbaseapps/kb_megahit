@@ -51,13 +51,28 @@ class MegaHitTest(unittest.TestCase):
     def getContext(self):
         return self.__class__.ctx
 
-    def test_count_contigs(self):
-        obj_name = "contigset.1"
-        contig = {'id': '1', 'length': 10, 'md5': 'md5', 'sequence': 'agcttttcat'}
-        obj = {'contigs': [contig], 'id': 'id', 'md5': 'md5', 'name': 'name', 
-                'source': 'source', 'source_id': 'source_id', 'type': 'type'}
-        self.getWsClient().save_objects({'workspace': self.getWsName(), 'objects':
-            [{'type': 'KBaseGenomes.ContigSet', 'name': obj_name, 'data': obj}]})
-        ret = self.getImpl().count_contigs(self.getContext(), self.getWsName(), obj_name)
-        self.assertEqual(ret[0]['contig_count'], 1)
+    #def test_count_contigs(self):
+    #    obj_name = "contigset.1"
+    #    contig = {'id': '1', 'length': 10, 'md5': 'md5', 'sequence': 'agcttttcat'}
+    #    obj = {'contigs': [contig], 'id': 'id', 'md5': 'md5', 'name': 'name', 
+    #            'source': 'source', 'source_id': 'source_id', 'type': 'type'}
+    #    self.getWsClient().save_objects({'workspace': self.getWsName(), 'objects':
+    #        [{'type': 'KBaseGenomes.ContigSet', 'name': obj_name, 'data': obj}]})
+    #    ret = self.getImpl().count_contigs(self.getContext(), self.getWsName(), obj_name)
+    #    self.assertEqual(ret[0]['contig_count'], 1)
+
+
+    def test_run_megahit(self):
+        params = {
+            'workspace_name': 'msneddon:1445974419712',
+            'read_library_name': 'rhodo.art.q20.int.PE.reads',
+            'megahit_parameter_preset': 'param',
+            'output_contigset_name': 'outputset' 
+        }
+
+
+        result = self.getImpl().run_megahit(self.getContext(),params)
+
+        pprint(result)
+
         

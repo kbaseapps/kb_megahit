@@ -1,4 +1,8 @@
 #BEGIN_HEADER
+import sys
+import subprocess
+from pprint import pprint
+
 from biokbase.workspace.client import Workspace as workspaceService
 #END_HEADER
 
@@ -21,6 +25,7 @@ This sample module contains one small method - count_contigs.
     #########################################
     #BEGIN_CLASS_HEADER
     workspaceURL = None
+    MEGAHIT = '/kb/module/megahit/megahit'
     #END_CLASS_HEADER
 
     # config contains contents of config file in a hash or None if it couldn't
@@ -35,6 +40,45 @@ This sample module contains one small method - count_contigs.
         # ctx is the context object
         # return variables are: output
         #BEGIN run_megahit
+
+        # do some basic checks
+        objref = ''
+        if 'workspace_name' not in params:
+            raise ValueError('workspace_name parameter is required')
+        if 'read_library_name' not in params:
+            raise ValueError('read_library_name parameter is required')
+        if 'output_contigset_name' not in params:
+            raise ValueError('output_contigset_name parameter is required')
+
+        # get the ws object, just to check that it is the correct type, etc.
+
+        ws = workspaceService(self.workspaceURL, token=ctx['token'])
+        objects = ws.get_objects([{'ref': params['workspace_name']+'/'+params['read_library_name']}])
+        data = objects[0]['data']
+        info = objects[0]['info']
+        pprint(data)
+        pprint(info)
+
+
+        # construct the command
+
+        # run megahit, capture output as it happens
+        p = subprocess.Popen([self.MEGAHIT],
+                    stdout = subprocess.PIPE, 
+                    stderr = subprocess.STDOUT, shell = False)
+
+        console_out = ''
+        while True:
+            line = p.stdout.readline()
+            if not line: break
+            print line.replace('\n', '')
+            console_out += line + '\n'
+
+        p.stdout.close()
+        p.wait()
+
+        output = {'console_out':console_out }
+
         #END run_megahit
 
         # At some point might do deeper type checking...
