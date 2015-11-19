@@ -65,7 +65,7 @@ class MegaHitTest(unittest.TestCase):
     def test_run_megahit(self):
         params = {
             'workspace_name': 'msneddon:1445974419712',
-            'read_library_name': 'rhodo.art.q20.int.PE.reads',
+            'read_library_name': 'small.reads',#'rhodo.art.q20.int.PE.reads',
             'megahit_parameter_preset': 'param',
             'output_contigset_name': 'outputset' 
         }
