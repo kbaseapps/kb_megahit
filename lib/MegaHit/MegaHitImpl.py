@@ -58,7 +58,7 @@ This sample module contains one small method - count_contigs.
         self.workspaceURL = config['workspace-url']
         self.scratch = os.path.abspath(config['scratch'])
         # HACK!! temporary hack for issue where megahit fails on mac because of silent named pipe error
-        self.host_scratch = self.scratch
+        #self.host_scratch = self.scratch
         self.scratch = os.path.join('/kb','module','local_scratch')
         # end hack
         if not os.path.exists(self.scratch):
@@ -252,7 +252,7 @@ This sample module contains one small method - count_contigs.
             })
 
         # HACK for testing on Mac!!
-        shutil.move(output_dir,self.host_scratch)
+        #shutil.move(output_dir,self.host_scratch)
         # END HACK!!
 
 
