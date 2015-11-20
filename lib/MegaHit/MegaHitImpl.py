@@ -113,7 +113,7 @@ class MegaHit:
         if type_name == 'PairedEndLibrary':
             try:
                 if 'lib1' in data:
-                    forward_reads = data['file']
+                    forward_reads = data['lib1']['file']
                 elif 'handle_1' in data:
                     forward_reads = data['handle_1']
                 if 'lib2' in data:
