@@ -1,14 +1,16 @@
 module-name:
     MegaHit
 
-module-description:
-    A KBase module
+module-description: |
+    <p>This is a KBase wrapper for MEGAHIT.</p>
+    <p>MEGAHIT is a single node assembler for large and complex metagenomics NGS reads, such as soil. It makes use of succinct de Bruijn graph (SdBG) to achieve low memory assembly.</p>
+    <p>https://github.com/voutcn/megahit</p>
 
 service-language:
     python
 
 module-version:
-    0.0.1
+    1.0.0
 
 owners:
     [msneddon]

@@ -66,6 +66,81 @@
 		        }
 		      ]
 		    }
+		},
+		{
+		    "id" : "min_count",
+		    "optional" : true,
+		    "advanced" : true,
+		    "allow_multiple" : false,
+		    "default_values" : [ "" ],
+		    "field_type" : "text",
+			"text_options" : {
+			    "validate_as": "int"
+		    }
+		},
+		{
+		    "id" : "k_min",
+		    "optional" : true,
+		    "advanced" : true,
+		    "allow_multiple" : false,
+		    "default_values" : [ "" ],
+		    "field_type" : "text",
+			"text_options" : {
+			    "validate_as": "int",
+      			"min_int" : 1,
+      			"max_int" : 127
+		    }
+		},
+		{
+		    "id" : "k_max",
+		    "optional" : true,
+		    "advanced" : true,
+		    "allow_multiple" : false,
+		    "default_values" : [ "" ],
+		    "field_type" : "text",
+			"text_options" : {
+			    "validate_as": "int",
+      			"min_int" : 1,
+      			"max_int" : 127
+		    }
+		},
+		{
+		    "id" : "k_step",
+		    "optional" : true,
+		    "advanced" : true,
+		    "allow_multiple" : false,
+		    "default_values" : [ "" ],
+		    "field_type" : "text",
+			"text_options" : {
+			    "validate_as": "int",
+      			"min_int" : 1,
+      			"max_int" : 28
+		    }
+		},
+		{
+		    "id" : "k_list",
+		    "optional" : true,
+		    "advanced" : true,
+		    "allow_multiple" : false,
+		    "default_values" : [ "" ],
+		    "field_type" : "text",
+			"text_options" : {
+			    "validate_as": "int",
+      			"min_int" : 15,
+      			"max_int" : 127
+		    }
+		},
+		{
+		    "id" : "min_contig_len",
+		    "optional" : true,
+		    "advanced" : true,
+		    "allow_multiple" : true,
+		    "default_values" : [ "" ],
+		    "field_type" : "text",
+			"text_options" : {
+			    "validate_as": "int",
+      			"min_int" : 1,
+		    }
 		}
 	],
 	"behavior": {
@@ -89,6 +164,30 @@
 				{
 					"input_parameter": "megahit_parameter_preset",
           			"target_property": "megahit_parameter_preset"
+				},
+				{
+					"input_parameter": "min_count",
+          			"target_property": "min_count"
+				},
+				{
+					"input_parameter": "k_min",
+          			"target_property": "k_min"
+				},
+				{
+					"input_parameter": "k_max",
+          			"target_property": "k_max"
+				},
+				{
+					"input_parameter": "k_step",
+          			"target_property": "k_step"
+				},
+				{
+					"input_parameter": "k_list",
+          			"target_property": "k_list"
+				},
+				{
+					"input_parameter": "min_contig_len",
+          			"target_property": "min_contig_len"
 				}
 			],
 			"output_mapping": [
