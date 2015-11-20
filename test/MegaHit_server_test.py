@@ -67,12 +67,11 @@ class MegaHitTest(unittest.TestCase):
             'workspace_name': 'msneddon:1445974419712',
             'read_library_name': 'small.reads',#'rhodo.art.q20.int.PE.reads',
             'megahit_parameter_preset': 'param',
-            'output_contigset_name': 'outputset' 
+            'output_contigset_name': 'output.contigset' 
         }
 
 
         result = self.getImpl().run_megahit(self.getContext(),params)
-
         pprint(result)
 
         

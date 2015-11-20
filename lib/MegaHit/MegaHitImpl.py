@@ -1,12 +1,16 @@
 #BEGIN_HEADER
 import os
 import sys
+import shutil
+import hashlib
 import subprocess
 import requests
 import re
 import traceback
 from datetime import datetime
-from pprint import pprint
+from pprint import pprint, pformat
+
+from Bio import SeqIO
 
 from biokbase.workspace.client import Workspace as workspaceService
 #END_HEADER
@@ -32,10 +36,18 @@ This sample module contains one small method - count_contigs.
     workspaceURL = None
     MEGAHIT = '/kb/module/megahit/megahit'
 
-    def log(self, message):
+    # target is a list for collecting log messages
+    def log(self, target, message):
         # we should do something better here...
+        if target is not None:
+            target.append(message)
         print(message)
         sys.stdout.flush()
+
+
+    def get_pe_library_deinterleaved(self, ws_data, ws_info, forward, reverse):
+        pass
+
 
     #END_CLASS_HEADER
 
@@ -45,6 +57,10 @@ This sample module contains one small method - count_contigs.
         #BEGIN_CONSTRUCTOR
         self.workspaceURL = config['workspace-url']
         self.scratch = os.path.abspath(config['scratch'])
+        # HACK!! temporary hack for issue where megahit fails on mac because of silent named pipe error
+        self.host_scratch = self.scratch
+        self.scratch = os.path.join('/kb','module','local_scratch')
+        # end hack
         if not os.path.exists(self.scratch):
             os.makedirs(self.scratch)
         #END_CONSTRUCTOR
@@ -52,8 +68,12 @@ This sample module contains one small method - count_contigs.
 
     def run_megahit(self, ctx, params):
         # ctx is the context object
-        # return variables are: output
+        # return variables are: output/
         #BEGIN run_megahit
+        report = []
+        console = []
+        self.log(console,'Running run_megahit with params=')
+        self.log(console, pformat(params))
 
         #### do some basic checks
         objref = ''
@@ -83,108 +103,160 @@ This sample module contains one small method - count_contigs.
             # 9 - int size 
             # 10 - usermeta meta
             type_name = info[2].split('.')[1].split('-')[0]
-            pprint(data)
-            pprint(info)
         except Exception as e:
             raise ValueError('Unable to fetch read library object from workspace: ' + str(e))
             #to get the full stack trace: traceback.format_exc()
 
-        #forward_reads = {}
-        #reverse_reads = {}
-        #forward_reads['file_name']='forward.fastq'
-        #reverse_reads['file_name']='reverse.fastq'
+############### temporary hack, set to False for local testing of just contigset processing
+        if True:
 
+            #### Download the paired end library
+            if type_name == 'PairedEndLibrary':
+                try:
+                    if 'lib1' in data:
+                        forward_reads = data['file']
+                    elif 'handle_1' in data:
+                        forward_reads = data['handle_1']
+                    if 'lib2' in data:
+                        reverse_reads = data['lib2']['file']
+                    elif 'handle_2' in data:
+                        reverse_reads = data['handle_2']
+                    else:
+                        reverse_reads={}
 
-        #### Download the paired end library
-        if type_name == 'PairedEndLibrary':
-            try:
-                if 'lib1' in data:
-                    forward_reads = data['file']
-                elif 'handle_1' in data:
-                    forward_reads = data['handle_1']
-                if 'lib2' in data:
-                    reverse_reads = data['lib2']['file']
-                elif 'handle_2' in data:
-                    reverse_reads = data['handle_2']
-                else:
-                    reverse_reads={}
-
-                ### NOTE: this section is what could be replaced by the transform services
-                forward_reads_file_location = os.path.join(self.scratch,forward_reads['file_name'])
-                forward_reads_file = open(forward_reads_file_location, 'w', 0)
-                self.log('downloading reads file: '+str(forward_reads_file_location))
-                headers = {'Authorization': 'OAuth '+ctx['token']}
-                r = requests.get(forward_reads['url']+'/node/'+forward_reads['id']+'?download', stream=True, headers=headers)
-                for chunk in r.iter_content(1024):
-                    forward_reads_file.write(chunk)
-                forward_reads_file.close();
-                self.log('done')
-                ### END NOTE
-
-                if 'interleaved' in data and data['interleaved']:
-                    self.log('extracting forward/reverse reads into separate files')
-                    if re.search('gz', forward_reads['file_name'], re.I):
-                        bcmdstring = 'gunzip -c ' + forward_reads_file_location
-                    else:    
-                        bcmdstring = 'cat ' + forward_reads_file_location 
-
-                    cmdstring = bcmdstring + '| (paste - - - - - - - -  | tee >(cut -f 1-4 | tr "\t" "\n" > '+self.scratch+'/forward.fastq) | cut -f 5-8 | tr "\t" "\n" > '+self.scratch+'/reverse.fastq )'
-                    cmdProcess = subprocess.Popen(cmdstring, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, executable='/bin/bash')
-                    stdout, stderr = cmdProcess.communicate()
-
-                    # Check return status
-                    report = "cmdstring: " + cmdstring + " stdout: " + stdout + " stderr: " + stderr
-                    
-                    forward_reads['file_name']='forward.fastq'
-                    reverse_reads['file_name']='reverse.fastq'
-                else:
-                    ### NOTE: this section is what could also be replaced by the transform services
-                    reverse_reads_file_location = os.path.join(self.scratch,reverse_reads['file_name'])
-                    reverse_reads_file = open(reverse_reads_file_location, 'w', 0)
-                    self.log('downloading reverse reads file: '+str(reverse_reads_file_location))
-                    r = requests.get(reverse_reads['url']+'/node/'+reverse_reads['id']+'?download', stream=True, headers=headers)
+                    ### NOTE: this section is what could be replaced by the transform services
+                    forward_reads_file_location = os.path.join(self.scratch,forward_reads['file_name'])
+                    forward_reads_file = open(forward_reads_file_location, 'w', 0)
+                    self.log(console, 'downloading reads file: '+str(forward_reads_file_location))
+                    headers = {'Authorization': 'OAuth '+ctx['token']}
+                    r = requests.get(forward_reads['url']+'/node/'+forward_reads['id']+'?download', stream=True, headers=headers)
                     for chunk in r.iter_content(1024):
-                        reverse_reads_file.write(chunk)
-                    reverse_reads_file.close()
-                    self.log('done')
+                        forward_reads_file.write(chunk)
+                    forward_reads_file.close();
+                    self.log(console, 'done')
                     ### END NOTE
-            except Exception as e:
-                print(traceback.format_exc())
-                raise ValueError('Unable to download paired-end read library files: ' + str(e))
-        #else:
-        #    raise ValueError('Cannot yet handle library type of: '+type_name)
+
+                    if 'interleaved' in data and data['interleaved']:
+                        self.log(console, 'extracting forward/reverse reads into separate files')
+                        if re.search('gz', forward_reads['file_name'], re.I):
+                            bcmdstring = 'gunzip -c ' + forward_reads_file_location
+                        else:    
+                            bcmdstring = 'cat ' + forward_reads_file_location 
+
+                        cmdstring = bcmdstring + '| (paste - - - - - - - -  | tee >(cut -f 1-4 | tr "\t" "\n" > '+self.scratch+'/forward.fastq) | cut -f 5-8 | tr "\t" "\n" > '+self.scratch+'/reverse.fastq )'
+                        cmdProcess = subprocess.Popen(cmdstring, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, executable='/bin/bash')
+                        stdout, stderr = cmdProcess.communicate()
+
+                        # Check return status
+                        report = "cmdstring: " + cmdstring + " stdout: " + stdout + " stderr: " + stderr
+                        
+                        forward_reads['file_name']='forward.fastq'
+                        reverse_reads['file_name']='reverse.fastq'
+                    else:
+                        ### NOTE: this section is what could also be replaced by the transform services
+                        reverse_reads_file_location = os.path.join(self.scratch,reverse_reads['file_name'])
+                        reverse_reads_file = open(reverse_reads_file_location, 'w', 0)
+                        self.log(console, 'downloading reverse reads file: '+str(reverse_reads_file_location))
+                        r = requests.get(reverse_reads['url']+'/node/'+reverse_reads['id']+'?download', stream=True, headers=headers)
+                        for chunk in r.iter_content(1024):
+                            reverse_reads_file.write(chunk)
+                        reverse_reads_file.close()
+                        self.log(console, 'done')
+                        ### END NOTE
+                except Exception as e:
+                    print(traceback.format_exc())
+                    raise ValueError('Unable to download paired-end read library files: ' + str(e))
+            else:
+                raise ValueError('Cannot yet handle library type of: '+type_name)
+
+            # construct the command
+
+            # run megahit, capture output as it happens
+            timestamp = int((datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds()*1000)
+            output_dir = os.path.join(self.scratch,'output.'+str(timestamp))
+            self.log(console, 'running megahit:')
+            p = subprocess.Popen([self.MEGAHIT, '-1', forward_reads['file_name'], '-2', reverse_reads['file_name'], 
+                        '--presets', 'meta',
+                        '-o',output_dir],
+                        cwd = self.scratch,
+                        stdout = subprocess.PIPE, 
+                        stderr = subprocess.STDOUT, shell = False)
+
+            while True:
+                line = p.stdout.readline()
+                if not line: break
+                self.log(console, line.replace('\n', ''))
+                report.append(line)
+
+            p.stdout.close()
+            p.wait()
+            self.log(console, 'return code: ' + str(p.returncode))
+            if p.returncode != 0:
+                raise ValueError('Error running megahit, return code: '+p.returncode + 
+                    '\n\n'+ '\n'.join(console))
+#############
+
+        # parse the output and save back to KBase
+        #output_dir = '/kb/module/work/tmp/output.1447974351986'
+        output_contigs = os.path.join(output_dir, 'final.contigs.fa')
+
+        # Warning: this reads everything into memory!  Will not work if 
+        # the contigset is very large!
+        contigset_data = {
+            'id':'megahit.contigset',
+            'source':'User assembled contigs from reads in KBase',
+            'source_id':'none',
+            'md5': 'md5 of what? concat seq? concat md5s?',
+            'contigs':[]
+        }
+
+        lengths = []
+        for seq_record in SeqIO.parse(output_contigs, 'fasta'):
+            contig = {
+                'id':seq_record.id,
+                'name':seq_record.name,
+                'description':seq_record.description,
+                'length':len(seq_record.seq),
+                'sequence':str(seq_record.seq),
+                'md5':hashlib.md5(str(seq_record.seq)).hexdigest()
+            }
+            lengths.append(contig['length'])
+            contigset_data['contigs'].append(contig)
 
 
-        # construct the command
+        self.log(report, 'Assembled into '+str(len(contigset_data['contigs'])) + ' contigs.')
+        self.log(report, 'Avg Length: '+str(sum(lengths)/float(len(lengths))) + ' bp.')
+        self.log(report, 'ContigSet saved to: '+params['workspace_name']+'/'+params['output_contigset_name'])
+        for contig in contigset_data['contigs']:
+            self.log(report, contig['description'])
 
-        # run megahit, capture output as it happens
-        timestamp = int((datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds()*1000)
-        output_dir = os.path.join(self.scratch,'output.'+str(timestamp))
-        self.log('running megahit:')
-        p = subprocess.Popen([self.MEGAHIT, '-1', forward_reads['file_name'], '-2', reverse_reads['file_name'], 
-                    '--presets', 'meta-sensitive',
-                    '-o',output_dir],
-                    cwd = self.scratch,
-                    stdout = subprocess.PIPE, 
-                    stderr = subprocess.PIPE, shell = False)
 
-        out, err = p.communicate()
-        self.log(out)
-        self.log(err)
-        #p.communicate()
-        console_out = ''
-        #while True:
-        #    line = p.stdout.readline()
-        #    if not line: break
-        #    print line.replace('\n', '')
-        #    console_out += line + '\n'
+        new_obj_info = ws.save_objects({
+                'id':info[6],
+                'objects':[
+                    {
+                        'type':'KBaseGenomes.ContigSet',
+                        'data':contigset_data,
+                        'name':params['output_contigset_name'],
+                        'meta':{},
+                        'provenance':[
+                            {
+                                'service':'MegaHit',
+                                'method':'run_megahit',
+                                'method_params':[params],
+                                'input_ws_objects':[params['workspace_name']+'/'+params['read_library_name']]
+                            }
+                        ]
+                    }
+                ]
+            })
 
-        p.stdout.close()
-        p.wait()
-        self.log('return code: ' + str(p.returncode))
+        # HACK for testing on Mac!!
+        shutil.move(output_dir,self.host_scratch)
+        # END HACK!!
 
-        output = {'console_out':console_out }
 
+        output = { 'console_out':console, 'report':report }
         #END run_megahit
 
         # At some point might do deeper type checking...

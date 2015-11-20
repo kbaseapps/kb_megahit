@@ -13,14 +13,14 @@
 	},
 	"parameters": [ 
 		{
-			"id": "contigset_id",
+			"id": "read_library",
 			"optional": false,
 			"advanced": false,
 			"allow_multiple": false,
 			"default_values": [ "" ],
 			"field_type": "text",
 			"text_options": {
-				"valid_ws_types": ["KBaseGenomes.ContigSet"]
+				"valid_ws_types": ["KBaseAssembly.PairedEndLibrary","KBaseFile.PairedEndLibrary"]
 			}
 		}
 	],
@@ -28,29 +28,25 @@
 		"service-mapping": {
 			"url": "",
 			"name": "MegaHit",
-			"method": "count_contigs",
+			"method": "run_megahit",
 			"input_mapping": [
 				{
 					"narrative_system_variable": "workspace",
-					"target_argument_position": 0
+					"target_property": "workspace_name"
 				},
 				{
-					"input_parameter": "contigset_id",
-					"target_argument_position": 1
+					"input_parameter": "read_library_name",
+          			"target_property": "read_library_name"
 				}
 			],
 			"output_mapping": [
 				{
-					"service_method_output_path": [0, "contig_count"],
-					"target_property": "contigCount"
+					"service_method_output_path": [0,"console_out"],
+					"target_property": "console_out"
 				},
 				{
-					"input_parameter": "contigset_id",
-					"target_property": "contigsetId"
-				},
-				{
-					"narrative_system_variable": "workspace",
-					"target_property": "workspaceName"
+					"service_method_output_path": [0,"report"],
+					"target_property": "report"
 				}
 			]
 		}

@@ -1,0 +1,37 @@
+#
+# define display information
+#
+name: MegaHit
+tooltip: |
+	Run megahit for metagenome assembly
+screenshots: []
+
+icon: icon.png
+
+#
+# define a set of similar methods that might be useful to the user
+#
+suggestions:
+	apps:
+		related:
+			[]
+		next:
+			[]
+	methods:
+		related:
+			[]
+		next:
+			[annot]
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    read_library :
+        ui-name : |
+            Read Library
+        short-hint : |
+            Read library
+
+description : |
+	<p></p>
