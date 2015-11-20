@@ -33,6 +33,9 @@ parameters :
     output_contigset_name:
         ui-name : Output ContigSet name
         short-hint : Enter a name for the assembled contigs data object
+    megahit_parameter_preset:
+        ui-name : Parameter preset
+        short-hint : Select a megahit parameter preset
 
 
 description : |

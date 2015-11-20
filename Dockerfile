@@ -2,18 +2,6 @@ FROM kbase/sdkbase:latest
 MAINTAINER Michael Sneddon
 # -----------------------------------------
 
-# Install the SDK (should go away eventually)
-RUN \
-  . /kb/dev_container/user-env.sh && \
-  cd /kb/dev_container/modules && \
-  rm -rf jars && \ 
-  git clone https://github.com/kbase/jars && \
-  rm -rf kb_sdk && \
-  git clone https://github.com/kbase/kb_sdk -b develop && \
-  cd /kb/dev_container/modules/jars && \
-  make deploy && \
-  cd /kb/dev_container/modules/kb_sdk && \
-  make && make deploy
 
 # Update Transform (should go away eventually)
 RUN \
@@ -36,6 +24,7 @@ WORKDIR /kb/module
 RUN \
   git clone https://github.com/voutcn/megahit.git && \
   cd megahit && \
+  git checkout tags/v1.0.3 && \
   make
 
 # copy local wrapper files, and build

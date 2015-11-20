@@ -34,6 +34,38 @@
 		     	"valid_ws_types" : [ "KBaseGenomes.ContigSet" ],
 		    	"is_output_name":true
 		    }
+		},
+		{
+		    "id" : "megahit_parameter_preset",
+		    "optional" : true,
+		    "advanced" : false,
+		    "allow_multiple" : false,
+		    "default_values" : [ "" ],
+		    "field_type" : "dropdown",
+		    "dropdown_options":{
+		      "options": [
+		        {
+		          "value": "meta",
+		          "display": "meta - General metagenome assembly, e.g. gut"
+		        },
+		        {
+		          "value": "meta-sensitive",
+		          "display": "meta-sensitive - More sensitive assembly, but slower"
+		        },
+		        {
+		          "value": "meta-large",
+		          "display": "meta-large - Large and complex assembly, e.g. soil"
+		        },
+		        {
+		          "value": "bulk",
+		          "display": "bulk - (experimental) bulk sequencing assembly"
+		        },
+		        {
+		          "value": "single-cell",
+		          "display": "single-cell - (experimental) single-cell assembly"
+		        }
+		      ]
+		    }
 		}
 	],
 	"behavior": {
@@ -53,6 +85,10 @@
 				{
 					"input_parameter": "output_contigset_name",
           			"target_property": "output_contigset_name"
+				},
+				{
+					"input_parameter": "megahit_parameter_preset",
+          			"target_property": "megahit_parameter_preset"
 				}
 			],
 			"output_mapping": [
