@@ -68,7 +68,7 @@ This sample module contains one small method - count_contigs.
 
     def run_megahit(self, ctx, params):
         # ctx is the context object
-        # return variables are: output/
+        # return variables are: output
         #BEGIN run_megahit
         report = []
         console = []
