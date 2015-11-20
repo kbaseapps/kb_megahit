@@ -28,10 +28,12 @@ suggestions:
 #
 parameters :
     read_library_name :
-        ui-name : |
-            Read Library
-        short-hint : |
-            Read library
+        ui-name : Read Library
+        short-hint : Read library (only PairedEnd Libs supported now)
+    output_contigset_name:
+        ui-name : Output ContigSet name
+        short-hint : Enter a name for the assembled contigs data object
+
 
 description : |
 	<p></p>

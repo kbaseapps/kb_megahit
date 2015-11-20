@@ -22,6 +22,18 @@
 			"text_options": {
 				"valid_ws_types": ["KBaseAssembly.PairedEndLibrary","KBaseFile.PairedEndLibrary"]
 			}
+		},
+		{
+		    "id" : "output_contigset_name",
+		    "optional" : false,
+		    "advanced" : false,
+		    "allow_multiple" : false,
+		    "default_values" : [ "MegaHit.contigs" ],
+		    "field_type" : "text",
+		    "text_options" : {
+		     	"valid_ws_types" : [ "KBaseGenomes.ContigSet" ],
+		    	"is_output_name":true
+		    }
 		}
 	],
 	"behavior": {
@@ -37,6 +49,10 @@
 				{
 					"input_parameter": "read_library_name",
           			"target_property": "read_library_name"
+				},
+				{
+					"input_parameter": "output_contigset_name",
+          			"target_property": "output_contigset_name"
 				}
 			],
 			"output_mapping": [
