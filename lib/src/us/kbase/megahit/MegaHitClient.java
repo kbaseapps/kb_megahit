@@ -155,25 +155,4 @@ public class MegaHitClient {
         List<MegaHitOutput> res = caller.jsonrpcCall("MegaHit.run_megahit", args, retType, true, true, jsonRpcContext);
         return res.get(0);
     }
-
-    /**
-     * <p>Original spec-file function name: count_contigs</p>
-     * <pre>
-     * Count contigs in a ContigSet
-     * contigset_id - the ContigSet to count.
-     * </pre>
-     * @param   arg1   instance of original type "workspace_name" (A string representing a workspace name.)
-     * @param   arg2   instance of original type "contigset_id" (A string representing a ContigSet id.)
-     * @return   instance of type {@link us.kbase.megahit.CountContigsResults CountContigsResults}
-     * @throws IOException if an IO exception occurs
-     * @throws JsonClientException if a JSON RPC exception occurs
-     */
-    public CountContigsResults countContigs(String arg1, String arg2, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
-        List<Object> args = new ArrayList<Object>();
-        args.add(arg1);
-        args.add(arg2);
-        TypeReference<List<CountContigsResults>> retType = new TypeReference<List<CountContigsResults>>() {};
-        List<CountContigsResults> res = caller.jsonrpcCall("MegaHit.count_contigs", args, retType, true, true, jsonRpcContext);
-        return res.get(0);
-    }
 }

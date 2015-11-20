@@ -279,4 +279,3 @@ This sample module contains one small method - count_contigs.
                              'output is not type dict as required.')
         # return the results
         return [output]
-        

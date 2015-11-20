@@ -63,9 +63,6 @@ async_check_methods = {}
 async_run_methods['MegaHit.run_megahit_async'] = ['MegaHit', 'run_megahit']
 async_check_methods['MegaHit.run_megahit_check'] = ['MegaHit', 'run_megahit']
 sync_methods['MegaHit.run_megahit'] = True
-async_run_methods['MegaHit.count_contigs_async'] = ['MegaHit', 'count_contigs']
-async_check_methods['MegaHit.count_contigs_check'] = ['MegaHit', 'count_contigs']
-sync_methods['MegaHit.count_contigs'] = True
 
 class AsyncJobServiceClient(object):
 
@@ -340,10 +337,6 @@ class Application(object):
                              name='MegaHit.run_megahit',
                              types=[dict])
         self.method_authentication['MegaHit.run_megahit'] = 'required'
-        self.rpc_service.add(impl_MegaHit.count_contigs,
-                             name='MegaHit.count_contigs',
-                             types=[basestring, basestring])
-        self.method_authentication['MegaHit.count_contigs'] = 'required'
         self.auth_client = biokbase.nexus.Client(
             config={'server': 'nexus.api.globusonline.org',
                     'verify_ssl': True,
