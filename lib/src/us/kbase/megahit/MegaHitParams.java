@@ -15,13 +15,36 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * <p>Original spec-file type: MegaHitParams</p>
  * <pre>
+ * Run Megahit.  Most parameters here are just passed forward to Megahit
+ * workspace_name - the name of the workspace for input/output
+ * read_library_name - the name of the PE read library (SE library support in the future)
+ * output_contig_set_name - the name of the output contigset
+ * megahit_parameter_preset - 
+ *         override a group of parameters; possible values:
+ *             meta            '--min-count 2 --k-list 21,41,61,81,99'
+ *             (generic metagenomes, default)
+ *             meta-sensitive  '--min-count 2 --k-list 21,31,41,51,61,71,81,91,99'
+ *             (more sensitive but slower)
+ *             meta-large      '--min-count 2 --k-list 27,37,47,57,67,77,87'
+ *             (large & complex metagenomes, like soil)
+ *             bulk            '--min-count 3 --k-list 31,51,71,91,99 --no-mercy'
+ *             (experimental, standard bulk sequencing with >= 30x depth)
+ *             single-cell     '--min-count 3 --k-list 21,33,55,77,99,121 --merge_level 20,0.96'
+ *             (experimental, single cell data)
+ * min_count - minimum multiplicity for filtering (k_min+1)-mers, default 2
+ *             min_k - minimum kmer size (<= 127), must be odd number, default 21
+ *             max_k - maximum kmer size (<= 127), must be odd number, default 99
+ *         k_step - increment of kmer size of each iteration (<= 28), must be even number, default 10
+ *         k_list - list of kmer size (all must be odd, in the range 15-127, increment <= 28);
+ *  override `--k-min', `--k-max' and `--k-step'
+ * min_contig_length - minimum length of contigs to output, default 200
  * @optional megahit_parameter_preset
  * @optional min_count
  * @optional k_min
  * @optional k_max
  * @optional k_step
  * @optional k_list
- * @optional min_contig_length
+ * @optional min_contig_len
  * </pre>
  * 
  */
@@ -37,7 +60,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "k_max",
     "k_step",
     "k_list",
-    "min_contig_length"
+    "min_contig_len"
 })
 public class MegaHitParams {
 
@@ -59,8 +82,8 @@ public class MegaHitParams {
     private java.lang.Long kStep;
     @JsonProperty("k_list")
     private List<Long> kList;
-    @JsonProperty("min_contig_length")
-    private java.lang.Long minContigLength;
+    @JsonProperty("min_contig_len")
+    private java.lang.Long minContigLen;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("workspace_name")
@@ -198,18 +221,18 @@ public class MegaHitParams {
         return this;
     }
 
-    @JsonProperty("min_contig_length")
-    public java.lang.Long getMinContigLength() {
-        return minContigLength;
+    @JsonProperty("min_contig_len")
+    public java.lang.Long getMinContigLen() {
+        return minContigLen;
     }
 
-    @JsonProperty("min_contig_length")
-    public void setMinContigLength(java.lang.Long minContigLength) {
-        this.minContigLength = minContigLength;
+    @JsonProperty("min_contig_len")
+    public void setMinContigLen(java.lang.Long minContigLen) {
+        this.minContigLen = minContigLen;
     }
 
-    public MegaHitParams withMinContigLength(java.lang.Long minContigLength) {
-        this.minContigLength = minContigLength;
+    public MegaHitParams withMinContigLen(java.lang.Long minContigLen) {
+        this.minContigLen = minContigLen;
         return this;
     }
 
@@ -225,7 +248,7 @@ public class MegaHitParams {
 
     @Override
     public String toString() {
-        return ((((((((((((((((((((((("MegaHitParams"+" [workspaceName=")+ workspaceName)+", readLibraryName=")+ readLibraryName)+", outputContigsetName=")+ outputContigsetName)+", megahitParameterPreset=")+ megahitParameterPreset)+", minCount=")+ minCount)+", kMin=")+ kMin)+", kMax=")+ kMax)+", kStep=")+ kStep)+", kList=")+ kList)+", minContigLength=")+ minContigLength)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((((((((((("MegaHitParams"+" [workspaceName=")+ workspaceName)+", readLibraryName=")+ readLibraryName)+", outputContigsetName=")+ outputContigsetName)+", megahitParameterPreset=")+ megahitParameterPreset)+", minCount=")+ minCount)+", kMin=")+ kMin)+", kMax=")+ kMax)+", kStep=")+ kStep)+", kList=")+ kList)+", minContigLen=")+ minContigLen)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

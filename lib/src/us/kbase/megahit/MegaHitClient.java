@@ -15,8 +15,7 @@ import us.kbase.common.service.UnauthorizedException;
 /**
  * <p>Original spec-file module name: MegaHit</p>
  * <pre>
- * A KBase module: MegaHit
- * This sample module contains one small method - count_contigs.
+ * A KBase module to wrap the MegaHit package.
  * </pre>
  */
 public class MegaHitClient {

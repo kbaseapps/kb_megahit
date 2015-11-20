@@ -24,8 +24,7 @@ class MegaHit:
     MegaHit
 
     Module Description:
-    A KBase module: MegaHit
-This sample module contains one small method - count_contigs.
+    A KBase module to wrap the MegaHit package.
     '''
 
     ######## WARNING FOR GEVENT USERS #######
@@ -183,6 +182,36 @@ This sample module contains one small method - count_contigs.
             if params['megahit_parameter_preset']:
                 megahit_cmd.append('--presets')
                 megahit_cmd.append(params['megahit_parameter_preset'])
+
+        if 'min_count' in params:
+            if params['min_count']:
+                megahit_cmd.append('--min-count')
+                megahit_cmd.append(str(params['min_count']))
+        if 'k_min' in params:
+            if params['k_min']:
+                megahit_cmd.append('--k-min')
+                megahit_cmd.append(str(params['k_min']))
+        if 'k_max' in params:
+            if params['k_max']:
+                megahit_cmd.append('--k-max')
+                megahit_cmd.append(str(params['k_max']))
+        if 'k_step' in params:
+            if params['k_step']:
+                megahit_cmd.append('--k-step')
+                megahit_cmd.append(str(params['k_step']))
+        if 'k_list' in params:
+            if params['k_list']:
+                k_list = []
+                for k_val in params['k_list']:
+                    k_list.append(str(k_val))
+                megahit_cmd.append('--k-list')
+                megahit_cmd.append(','.join(k_list))
+        if 'min_contig_len' in params:
+            if params['min_contig_len']:
+                megahit_cmd.append('--min-contig-len')
+                megahit_cmd.append(str(params['min_contig_len']))
+
+
 
         # set the output location
         timestamp = int((datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds()*1000)

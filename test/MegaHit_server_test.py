@@ -67,9 +67,14 @@ class MegaHitTest(unittest.TestCase):
             'workspace_name': 'msneddon:1445974419712',
             'read_library_name': 'small.reads',#'rhodo.art.q20.int.PE.reads',
             'megahit_parameter_preset': 'meta',
-            'output_contigset_name': 'output.contigset' 
+            'output_contigset_name': 'output.contigset',
+            #'min_count':2,
+            #'k_min':31,
+            #'k_max':51,
+            #'k_step':10,
+            #'k_list':[31,41],
+            #'min_contig_length':199
         }
-
 
         result = self.getImpl().run_megahit(self.getContext(),params)
         pprint(result)
