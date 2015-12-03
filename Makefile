@@ -25,7 +25,6 @@ compile:
 		--pyclname $(SERVICE_CAPS).$(SERVICE_CAPS)Client \
 		--javasrc src \
 		--java \
-		--errortest \
 		--pysrvname $(SERVICE_CAPS).$(SERVICE_CAPS)Server \
 		--pyimplname $(SERVICE_CAPS).$(SERVICE_CAPS)Impl;
 	chmod +x $(SCRIPTS_DIR)/entrypoint.sh
