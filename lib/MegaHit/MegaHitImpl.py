@@ -7,6 +7,7 @@ import subprocess
 import requests
 import re
 import traceback
+import uuid
 from datetime import datetime
 from pprint import pprint, pformat
 
@@ -299,7 +300,35 @@ class MegaHit:
         for c in range(bins):
             self.log(report, '   '+str(counts[c]) + '\t--\t' + str(edges[c]) + ' to ' + str(edges[c+1]) + ' bp')
 
-        output = { 'console_out':console, 'report':report }
+        reportObj = {
+            'objects_created':[{'ref':params['workspace_name']+'/'+params['output_contigset_name'], 'description':'Assembled contigs'}],
+            'text_message':'\n'.join(report)
+        }
+
+        reportName = 'megahit_report_'+str(hex(uuid.getnode()))
+        report_obj_info = ws.save_objects({
+                'id':info[6],
+                'objects':[
+                    {
+                        'type':'KBaseReport.Report',
+                        'data':reportObj,
+                        'name':reportName,
+                        'meta':{},
+                        'hidden':1,
+                        'provenance':[
+                            {
+                                'service':'MegaHit',
+                                'method':'run_megahit',
+                                'method_params':[params],
+                                'input_ws_objects':[params['workspace_name']+'/'+params['read_library_name']]
+                            }
+                        ]
+                    }
+                ]
+            })
+
+
+        output = { 'report_name':reportName }
         #END run_megahit
 
         # At some point might do deeper type checking...

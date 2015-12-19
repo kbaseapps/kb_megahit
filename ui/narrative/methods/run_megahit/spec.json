@@ -192,12 +192,12 @@
 			],
 			"output_mapping": [
 				{
-					"service_method_output_path": [0,"console_out"],
-					"target_property": "console_out"
+					"narrative_system_variable": "workspace",
+					"target_property": "workspace_name"
 				},
 				{
-					"service_method_output_path": [0,"report"],
-					"target_property": "report"
+					"service_method_output_path": [0,"report_name"],
+					"target_property": "report_name"
 				}
 			]
 		}
