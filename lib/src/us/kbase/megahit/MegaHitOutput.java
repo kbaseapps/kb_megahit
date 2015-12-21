@@ -2,7 +2,6 @@
 package us.kbase.megahit;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.annotation.Generated;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -20,60 +19,60 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("com.googlecode.jsonschema2pojo")
 @JsonPropertyOrder({
-    "console_out",
-    "report"
+    "report_name",
+    "report_ref"
 })
 public class MegaHitOutput {
 
-    @JsonProperty("console_out")
-    private List<String> consoleOut;
-    @JsonProperty("report")
-    private List<String> report;
-    private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
+    @JsonProperty("report_name")
+    private String reportName;
+    @JsonProperty("report_ref")
+    private String reportRef;
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("console_out")
-    public List<String> getConsoleOut() {
-        return consoleOut;
+    @JsonProperty("report_name")
+    public String getReportName() {
+        return reportName;
     }
 
-    @JsonProperty("console_out")
-    public void setConsoleOut(List<String> consoleOut) {
-        this.consoleOut = consoleOut;
+    @JsonProperty("report_name")
+    public void setReportName(String reportName) {
+        this.reportName = reportName;
     }
 
-    public MegaHitOutput withConsoleOut(List<String> consoleOut) {
-        this.consoleOut = consoleOut;
+    public MegaHitOutput withReportName(String reportName) {
+        this.reportName = reportName;
         return this;
     }
 
-    @JsonProperty("report")
-    public List<String> getReport() {
-        return report;
+    @JsonProperty("report_ref")
+    public String getReportRef() {
+        return reportRef;
     }
 
-    @JsonProperty("report")
-    public void setReport(List<String> report) {
-        this.report = report;
+    @JsonProperty("report_ref")
+    public void setReportRef(String reportRef) {
+        this.reportRef = reportRef;
     }
 
-    public MegaHitOutput withReport(List<String> report) {
-        this.report = report;
+    public MegaHitOutput withReportRef(String reportRef) {
+        this.reportRef = reportRef;
         return this;
     }
 
     @JsonAnyGetter
-    public Map<java.lang.String, Object> getAdditionalProperties() {
+    public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
     @JsonAnySetter
-    public void setAdditionalProperties(java.lang.String name, Object value) {
+    public void setAdditionalProperties(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
 
     @Override
-    public java.lang.String toString() {
-        return ((((((("MegaHitOutput"+" [consoleOut=")+ consoleOut)+", report=")+ report)+", additionalProperties=")+ additionalProperties)+"]");
+    public String toString() {
+        return ((((((("MegaHitOutput"+" [reportName=")+ reportName)+", reportRef=")+ reportRef)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

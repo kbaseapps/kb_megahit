@@ -72,7 +72,6 @@ class MegaHit:
         # ctx is the context object
         # return variables are: output
         #BEGIN run_megahit
-        report = []
         console = []
         self.log(console,'Running run_megahit with params=')
         self.log(console, pformat(params))
@@ -93,6 +92,7 @@ class MegaHit:
             data = objects[0]['data']
             info = objects[0]['info']
             # Object Info Contents
+            # absolute ref = info[6] + '/' + info[0] + '/' + info[4]
             # 0 - obj_id objid
             # 1 - obj_name name
             # 2 - type_string type
@@ -147,8 +147,7 @@ class MegaHit:
                     cmdProcess = subprocess.Popen(cmdstring, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, executable='/bin/bash')
                     stdout, stderr = cmdProcess.communicate()
 
-                    # Check return status
-                    report = "cmdstring: " + cmdstring + " stdout: " + stdout + " stderr: " + stderr
+                    self.log(console, "cmdstring: " + cmdstring + " stdout: " + stdout + " stderr: " + stderr)
                     
                     forward_reads['file_name']='forward.fastq'
                     reverse_reads['file_name']='reverse.fastq'
@@ -266,22 +265,24 @@ class MegaHit:
             lengths.append(contig['length'])
             contigset_data['contigs'].append(contig)
 
+
+        # load the method provenance from the context object
+        provenance = [{}]
+        if 'provenance' in ctx:
+            provenance = ctx['provenance']
+        # add additional info to provenance here, in this case the input data object reference
+        provenance[0]['input_ws_objects']=[params['workspace_name']+'/'+params['read_library_name']]
+
+        # save the contigset output
         new_obj_info = ws.save_objects({
-                'id':info[6],
+                'id':info[6], # set the output workspace ID
                 'objects':[
                     {
                         'type':'KBaseGenomes.ContigSet',
                         'data':contigset_data,
                         'name':params['output_contigset_name'],
                         'meta':{},
-                        'provenance':[
-                            {
-                                'service':'MegaHit',
-                                'method':'run_megahit',
-                                'method_params':[params],
-                                'input_ws_objects':[params['workspace_name']+'/'+params['read_library_name']]
-                            }
-                        ]
+                        'provenance':provenance
                     }
                 ]
             })
@@ -290,19 +291,22 @@ class MegaHit:
         #shutil.move(output_dir,self.host_scratch)
         # END HACK!!
 
-        # create the report
-        self.log(report, 'ContigSet saved to: '+params['workspace_name']+'/'+params['output_contigset_name'])
-        self.log(report, 'Assembled into '+str(len(contigset_data['contigs'])) + ' contigs.')
-        self.log(report, 'Avg Length: '+str(sum(lengths)/float(len(lengths))) + ' bp.')
+        # create a Report
+        report = ''
+        report += 'ContigSet saved to: '+params['workspace_name']+'/'+params['output_contigset_name']+'\n'
+        report += 'Assembled into '+str(len(contigset_data['contigs'])) + ' contigs.\n'
+        report += 'Avg Length: '+str(sum(lengths)/float(len(lengths))) + ' bp.\n'
+
+        # compute a simple contig length distribution
         bins = 10
         counts, edges = np.histogram(lengths, bins)
-        self.log(report, 'Contig Length Distribution (# of contigs -- min to max basepairs):')
+        report += 'Contig Length Distribution (# of contigs -- min to max basepairs):\n'
         for c in range(bins):
-            self.log(report, '   '+str(counts[c]) + '\t--\t' + str(edges[c]) + ' to ' + str(edges[c+1]) + ' bp')
+            report += '   '+str(counts[c]) + '\t--\t' + str(edges[c]) + ' to ' + str(edges[c+1]) + ' bp\n'
 
         reportObj = {
             'objects_created':[{'ref':params['workspace_name']+'/'+params['output_contigset_name'], 'description':'Assembled contigs'}],
-            'text_message':'\n'.join(report)
+            'text_message':report
         }
 
         reportName = 'megahit_report_'+str(hex(uuid.getnode()))
@@ -315,20 +319,12 @@ class MegaHit:
                         'name':reportName,
                         'meta':{},
                         'hidden':1,
-                        'provenance':[
-                            {
-                                'service':'MegaHit',
-                                'method':'run_megahit',
-                                'method_params':[params],
-                                'input_ws_objects':[params['workspace_name']+'/'+params['read_library_name']]
-                            }
-                        ]
+                        'provenance':provenance
                     }
                 ]
-            })
+            })[0]
 
-
-        output = { 'report_name':reportName }
+        output = { 'report_name': reportName, 'report_ref': str(report_obj_info[6]) + '/' + str(report_obj_info[0]) + '/' + str(report_obj_info[4]) }
         #END run_megahit
 
         # At some point might do deeper type checking...

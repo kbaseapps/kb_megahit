@@ -134,8 +134,8 @@ MegaHitParams is a reference to a hash where the following keys are defined:
 	k_list has a value which is a reference to a list where each element is an int
 	min_contig_len has a value which is an int
 MegaHitOutput is a reference to a hash where the following keys are defined:
-	console_out has a value which is a reference to a list where each element is a string
-	report has a value which is a reference to a list where each element is a string
+	report_name has a value which is a string
+	report_ref has a value which is a string
 
 </pre>
 
@@ -157,8 +157,8 @@ MegaHitParams is a reference to a hash where the following keys are defined:
 	k_list has a value which is a reference to a list where each element is an int
 	min_contig_len has a value which is an int
 MegaHitOutput is a reference to a hash where the following keys are defined:
-	console_out has a value which is a reference to a list where each element is a string
-	report has a value which is a reference to a list where each element is a string
+	report_name has a value which is a string
+	report_ref has a value which is a string
 
 
 =end text
@@ -376,8 +376,8 @@ min_contig_len has a value which is an int
 
 <pre>
 a reference to a hash where the following keys are defined:
-console_out has a value which is a reference to a list where each element is a string
-report has a value which is a reference to a list where each element is a string
+report_name has a value which is a string
+report_ref has a value which is a string
 
 </pre>
 
@@ -386,8 +386,8 @@ report has a value which is a reference to a list where each element is a string
 =begin text
 
 a reference to a hash where the following keys are defined:
-console_out has a value which is a reference to a list where each element is a string
-report has a value which is a reference to a list where each element is a string
+report_name has a value which is a string
+report_ref has a value which is a string
 
 
 =end text

@@ -60,8 +60,8 @@ module MegaHit {
 
 
 	typedef structure {
-		list<string> console_out;
-		list<string> report;
+		string report_name;
+        string report_ref;
 	} MegaHitOutput;
 
 	funcdef run_megahit(MegaHitParams params) returns (MegaHitOutput output)
