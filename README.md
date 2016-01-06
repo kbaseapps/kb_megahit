@@ -6,3 +6,4 @@
 KBase wrapper for MegaHit.
 
 https://github.com/voutcn/megahit
+
