@@ -6,7 +6,7 @@ tooltip: |
 	Run megahit for metagenome assembly
 screenshots: []
 
-icon: icon.png
+icon: kb_logo.png
 
 #
 # define a set of similar methods that might be useful to the user
