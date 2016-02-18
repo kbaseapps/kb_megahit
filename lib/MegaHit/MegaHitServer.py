@@ -36,14 +36,14 @@ def get_config():
     retconfig = {}
     config = ConfigParser()
     config.read(get_config_file())
-    for nameval in config.items(get_service_name() or 'MegaHit'):
+    for nameval in config.items(get_service_name() or 'MEGAHIT'):
         retconfig[nameval[0]] = nameval[1]
     return retconfig
 
 config = get_config()
 
-from MegaHit.MegaHitImpl import MegaHit
-impl_MegaHit = MegaHit(config)
+from MEGAHIT.MEGAHITImpl import MEGAHIT
+impl_MEGAHIT = MEGAHIT(config)
 
 
 class JSONObjectEncoder(json.JSONEncoder):
@@ -60,9 +60,9 @@ class JSONObjectEncoder(json.JSONEncoder):
 sync_methods = {}
 async_run_methods = {}
 async_check_methods = {}
-async_run_methods['MegaHit.run_megahit_async'] = ['MegaHit', 'run_megahit']
-async_check_methods['MegaHit.run_megahit_check'] = ['MegaHit', 'run_megahit']
-sync_methods['MegaHit.run_megahit'] = True
+async_run_methods['MEGAHIT.run_megahit_async'] = ['MEGAHIT', 'run_megahit']
+async_check_methods['MEGAHIT.run_megahit_check'] = ['MEGAHIT', 'run_megahit']
+sync_methods['MEGAHIT.run_megahit'] = True
 
 class AsyncJobServiceClient(object):
 
@@ -323,7 +323,7 @@ class Application(object):
                                    context['method'], context['call_id'])
 
     def __init__(self):
-        submod = get_service_name() or 'MegaHit'
+        submod = get_service_name() or 'MEGAHIT'
         self.userlog = log.log(
             submod, ip_address=True, authuser=True, module=True, method=True,
             call_id=True, changecallback=self.logcallback,
@@ -334,10 +334,10 @@ class Application(object):
         self.serverlog.set_log_level(6)
         self.rpc_service = JSONRPCServiceCustom()
         self.method_authentication = dict()
-        self.rpc_service.add(impl_MegaHit.run_megahit,
-                             name='MegaHit.run_megahit',
+        self.rpc_service.add(impl_MEGAHIT.run_megahit,
+                             name='MEGAHIT.run_megahit',
                              types=[dict])
-        self.method_authentication['MegaHit.run_megahit'] = 'required'
+        self.method_authentication['MEGAHIT.run_megahit'] = 'required'
         self.auth_client = biokbase.nexus.Client(
             config={'server': 'nexus.api.globusonline.org',
                     'verify_ssl': True,
@@ -391,7 +391,7 @@ class Application(object):
                         if token is None and auth_req == 'required':
                             err = ServerError()
                             err.data = "Authentication required for " + \
-                                "MegaHit but no authentication header was passed"
+                                "MEGAHIT but no authentication header was passed"
                             raise err
                         elif token is None and auth_req == 'optional':
                             pass

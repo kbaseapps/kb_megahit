@@ -103,7 +103,7 @@ class _JSONObjectEncoder(_json.JSONEncoder):
         return _json.JSONEncoder.default(self, obj)
 
 
-class MegaHit(object):
+class MEGAHIT(object):
 
     def __init__(self, url=None, timeout=30 * 60, user_id=None,
                  password=None, token=None, ignore_authrc=False,
@@ -174,7 +174,7 @@ class MegaHit(object):
     def run_megahit(self, params, json_rpc_context = None):
         if json_rpc_context and type(json_rpc_context) is not dict:
             raise ValueError('Method run_megahit: argument json_rpc_context is not type dict as required.')
-        resp = self._call('MegaHit.run_megahit',
+        resp = self._call('MEGAHIT.run_megahit',
                           [params], json_rpc_context)
         return resp[0]
  

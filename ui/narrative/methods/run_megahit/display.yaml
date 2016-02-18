@@ -1,9 +1,9 @@
 #
 # define display information
 #
-name: MegaHit
+name: Assemble metagneomic reads with MEGAHIT
 tooltip: |
-	Run megahit for metagenome assembly
+	Run MEGAHIT for metagenome assembly
 screenshots: []
 
 icon: kb_logo.png
@@ -35,7 +35,7 @@ parameters :
         short-hint : Enter a name for the assembled contigs data object
     megahit_parameter_preset:
         ui-name : Parameter preset
-        short-hint : Select a megahit parameter preset
+        short-hint : Select a MEGAHIT parameter preset
         description : |
             This option overrides a group of parameters.
             meta            '--min-count 2 --k-list 21,41,61,81,99'

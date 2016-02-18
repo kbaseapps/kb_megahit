@@ -1,9 +1,8 @@
-[![Build Status](https://travis-ci.org/msneddon/MegaHit.svg?branch=master)](https://travis-ci.org/msneddon/MegaHit)
 
-# MegaHit
+# MEGAHIT
 ---
 
-KBase wrapper for MegaHit.
+KBase wrapper for MEGAHIT.
 
 https://github.com/voutcn/megahit
 

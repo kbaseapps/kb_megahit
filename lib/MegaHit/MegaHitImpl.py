@@ -16,16 +16,19 @@ import numpy as np
 from Bio import SeqIO
 
 from biokbase.workspace.client import Workspace as workspaceService
+
+import requests.packages.urllib3
+requests.packages.urllib3.disable_warnings()
 #END_HEADER
 
 
-class MegaHit:
+class MEGAHIT:
     '''
     Module Name:
-    MegaHit
+    MEGAHIT
 
     Module Description:
-    A KBase module to wrap the MegaHit package.
+    A KBase module to wrap the MEGAHIT package.
     '''
 
     ######## WARNING FOR GEVENT USERS #######

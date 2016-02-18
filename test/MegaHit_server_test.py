@@ -11,7 +11,7 @@ from pprint import pprint
 
 from biokbase.workspace.client import Workspace as workspaceService
 from biokbase.AbstractHandle.Client import AbstractHandle as HandleService
-from MegaHit.MegaHitImpl import MegaHit
+from MEGAHIT.MEGAHITImpl import MEGAHIT
 
 
 class MegaHitTest(unittest.TestCase):
@@ -24,12 +24,12 @@ class MegaHitTest(unittest.TestCase):
         cls.cfg = {}
         config = ConfigParser()
         config.read(config_file)
-        for nameval in config.items('MegaHit'):
+        for nameval in config.items('MEGAHIT'):
             print(nameval[0] + '=' + nameval[1])
             cls.cfg[nameval[0]] = nameval[1]
         cls.wsURL = cls.cfg['workspace-url']
         cls.ws = workspaceService(cls.wsURL, token=token)
-        cls.serviceImpl = MegaHit(cls.cfg)
+        cls.serviceImpl = MEGAHIT(cls.cfg)
 
         cls.shockURL = cls.cfg['shock-url']
         cls.handleURL = cls.cfg['handle-service-url']
@@ -133,7 +133,7 @@ class MegaHitTest(unittest.TestCase):
                                 'meta':{},
                                 'provenance':[
                                     {
-                                        'service':'MegaHit',
+                                        'service':'MEGAHIT',
                                         'method':'test_megahit'
                                     }
                                 ]

@@ -28,7 +28,7 @@
 		    "optional" : false,
 		    "advanced" : false,
 		    "allow_multiple" : false,
-		    "default_values" : [ "MegaHit.contigs" ],
+		    "default_values" : [ "MEGAHIT.contigs" ],
 		    "field_type" : "text",
 		    "text_options" : {
 		     	"valid_ws_types" : [ "KBaseGenomes.ContigSet" ],
@@ -146,7 +146,7 @@
 	"behavior": {
 		"service-mapping": {
 			"url": "",
-			"name": "MegaHit",
+			"name": "MEGAHIT",
 			"method": "run_megahit",
 			"input_mapping": [
 				{

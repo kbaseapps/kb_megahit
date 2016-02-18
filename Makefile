@@ -1,6 +1,6 @@
 SERVICE = megahit
-SERVICE_CAPS = MegaHit
-SPEC_FILE = MegaHit.spec
+SERVICE_CAPS = MEGAHIT
+SPEC_FILE = MEGAHIT.spec
 URL = https://kbase.us/services/megahit
 DIR = $(shell pwd)
 LIB_DIR = lib

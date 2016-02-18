@@ -42,7 +42,7 @@ MegaHitClient <- function(url, token = NULL, flatten = TRUE,
     }
 
     ret_client_object_ref[['run_megahit']] <- function(params) {
-        ret <- ret_client_object_ref[['json_rpc_call']]("MegaHit.run_megahit", list(
+        ret <- ret_client_object_ref[['json_rpc_call']]("MEGAHIT.run_megahit", list(
                 params
         ))
         return(ret[[1]])
@@ -59,6 +59,6 @@ MegaHitClient <- function(url, token = NULL, flatten = TRUE,
     ret_client_object_ref[['simplifyDataFrame']] <- simplifyDataFrame 
     ret_client_object_ref[['simplifyVector']] <- simplifyVector
     ret_client_object_ref[['simplifyMatrix']] <- simplifyMatrix
-    class(ret_client_object_ref) <- 'MegaHitClient'
+    class(ret_client_object_ref) <- 'MEGAHITClient'
     return(ret_client_object_ref)
 }

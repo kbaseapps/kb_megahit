@@ -1,4 +1,4 @@
-package MegaHit::MegaHitClient;
+package MEGAHIT::MEGAHITClient;
 
 use JSON::RPC::Client;
 use POSIX;
@@ -21,12 +21,12 @@ our $VERSION = "0.1.0";
 
 =head1 NAME
 
-MegaHit::MegaHitClient
+MEGAHIT::MEGAHITClient
 
 =head1 DESCRIPTION
 
 
-A KBase module to wrap the MegaHit package.
+A KBase module to wrap the MEGAHIT package.
 
 
 =cut
@@ -37,7 +37,7 @@ sub new
     
 
     my $self = {
-	client => MegaHit::MegaHitClient::RpcClient->new,
+	client => MEGAHIT::MEGAHITClient::RpcClient->new,
 	url => $url,
 	headers => [],
     };
@@ -120,8 +120,8 @@ sub new
 =begin html
 
 <pre>
-$params is a MegaHit.MegaHitParams
-$output is a MegaHit.MegaHitOutput
+$params is a MEGAHIT.MegaHitParams
+$output is a MEGAHIT.MegaHitOutput
 MegaHitParams is a reference to a hash where the following keys are defined:
 	workspace_name has a value which is a string
 	read_library_name has a value which is a string
@@ -143,8 +143,8 @@ MegaHitOutput is a reference to a hash where the following keys are defined:
 
 =begin text
 
-$params is a MegaHit.MegaHitParams
-$output is a MegaHit.MegaHitOutput
+$params is a MEGAHIT.MegaHitParams
+$output is a MEGAHIT.MegaHitOutput
 MegaHitParams is a reference to a hash where the following keys are defined:
 	workspace_name has a value which is a string
 	read_library_name has a value which is a string
@@ -195,7 +195,7 @@ MegaHitOutput is a reference to a hash where the following keys are defined:
     }
 
     my $result = $self->{client}->call($self->{url}, $self->{headers}, {
-	method => "MegaHit.run_megahit",
+	method => "MEGAHIT.run_megahit",
 	params => \@args,
     });
     if ($result) {
@@ -221,7 +221,7 @@ MegaHitOutput is a reference to a hash where the following keys are defined:
 sub version {
     my ($self) = @_;
     my $result = $self->{client}->call($self->{url}, $self->{headers}, {
-        method => "MegaHit.version",
+        method => "MEGAHIT.version",
         params => [],
     });
     if ($result) {
@@ -264,10 +264,10 @@ sub _validate_version {
         );
     }
     if ($sMinor > $cMinor) {
-        warn "New client version available for MegaHit::MegaHitClient\n";
+        warn "New client version available for MEGAHIT::MEGAHITClient\n";
     }
     if ($sMajor == 0) {
-        warn "MegaHit::MegaHitClient version is $svr_version. API subject to change.\n";
+        warn "MEGAHIT::MEGAHITClient version is $svr_version. API subject to change.\n";
     }
 }
 
@@ -283,7 +283,7 @@ sub _validate_version {
 
 =item Description
 
-Run Megahit.  Most parameters here are just passed forward to Megahit
+Run MEGAHIT.  Most parameters here are just passed forward to MEGAHIT
 
 workspace_name - the name of the workspace for input/output
 read_library_name - the name of the PE read library (SE library support in the future)
@@ -398,7 +398,7 @@ report_ref has a value which is a string
 
 =cut
 
-package MegaHit::MegaHitClient::RpcClient;
+package MEGAHIT::MEGAHITClient::RpcClient;
 use base 'JSON::RPC::Client';
 use POSIX;
 use strict;

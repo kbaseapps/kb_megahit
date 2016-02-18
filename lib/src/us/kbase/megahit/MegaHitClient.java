@@ -13,19 +13,19 @@ import us.kbase.common.service.RpcContext;
 import us.kbase.common.service.UnauthorizedException;
 
 /**
- * <p>Original spec-file module name: MegaHit</p>
+ * <p>Original spec-file module name: MEGAHIT</p>
  * <pre>
- * A KBase module to wrap the MegaHit package.
+ * A KBase module to wrap the MEGAHIT package.
  * </pre>
  */
-public class MegaHitClient {
+public class MEGAHITClient {
     private JsonClientCaller caller;
 
 
     /** Constructs a client with a custom URL and no user credentials.
      * @param url the URL of the service.
      */
-    public MegaHitClient(URL url) {
+    public MEGAHITClient(URL url) {
         caller = new JsonClientCaller(url);
     }
     /** Constructs a client with a custom URL.
@@ -35,7 +35,7 @@ public class MegaHitClient {
      * @throws IOException if an IOException occurs when checking the token's
      * validity.
      */
-    public MegaHitClient(URL url, AuthToken token) throws UnauthorizedException, IOException {
+    public MEGAHITClient(URL url, AuthToken token) throws UnauthorizedException, IOException {
         caller = new JsonClientCaller(url, token);
     }
 
@@ -47,7 +47,7 @@ public class MegaHitClient {
      * @throws IOException if an IOException occurs when checking the user's
      * credentials.
      */
-    public MegaHitClient(URL url, String user, String password) throws UnauthorizedException, IOException {
+    public MEGAHITClient(URL url, String user, String password) throws UnauthorizedException, IOException {
         caller = new JsonClientCaller(url, user, password);
     }
 
@@ -151,7 +151,7 @@ public class MegaHitClient {
         List<Object> args = new ArrayList<Object>();
         args.add(params);
         TypeReference<List<MegaHitOutput>> retType = new TypeReference<List<MegaHitOutput>>() {};
-        List<MegaHitOutput> res = caller.jsonrpcCall("MegaHit.run_megahit", args, retType, true, true, jsonRpcContext);
+        List<MegaHitOutput> res = caller.jsonrpcCall("MEGAHIT.run_megahit", args, retType, true, true, jsonRpcContext);
         return res.get(0);
     }
 }

@@ -1,11 +1,11 @@
 /*
-A KBase module to wrap the MegaHit package.
+A KBase module to wrap the MEGAHIT package.
 */
 
-module MegaHit {
+module MEGAHIT {
 
 	/*
-		Run Megahit.  Most parameters here are just passed forward to Megahit
+		Run MEGAHIT.  Most parameters here are just passed forward to MEGAHIT
 
 		workspace_name - the name of the workspace for input/output
 		read_library_name - the name of the PE read library (SE library support in the future)
