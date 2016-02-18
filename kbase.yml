@@ -1,5 +1,5 @@
 module-name:
-    MegaHit
+    MEGAHIT
 
 module-description: |
     <p>This is a KBase wrapper for MEGAHIT.</p>
