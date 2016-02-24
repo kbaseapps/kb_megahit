@@ -1,12 +1,12 @@
 #
 # define display information
 #
-name: Assemble metagneomic reads with MEGAHIT
+name: MEGAHIT - Assemble metagneomic reads
 tooltip: |
 	Run MEGAHIT for metagenome assembly
 screenshots: []
 
-icon: kb_logo.png
+icon: megahit-blue.png
 
 #
 # define a set of similar methods that might be useful to the user
