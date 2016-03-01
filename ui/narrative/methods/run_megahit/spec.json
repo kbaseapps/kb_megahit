@@ -9,7 +9,7 @@
 	"categories": ["active","assembly","communities"],
 	"widgets": {
 		"input": null,
-		"output": "kbaseReportView"
+		"output": "no-display"
 	},
 	"parameters": [ 
 		{
