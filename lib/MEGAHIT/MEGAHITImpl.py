@@ -130,9 +130,6 @@ class MEGAHIT:
                 fr_file_name = forward_reads['id']
                 if 'file_name' in forward_reads:
                     fr_file_name = forward_reads['file_name']
-                rev_file_name = reverse_reads['id']
-                if 'file_name' in reverse_reads:
-                    rev_file_name = reverse_reads['file_name']
                 
                 ### NOTE: this section is what could be replaced by the transform services
                 forward_reads_file_location = os.path.join(self.scratch,fr_file_name)
@@ -164,6 +161,10 @@ class MEGAHIT:
                     rev_file_name = 'reverse.fastq'
                     reverse_reads['file_name']=rev_file_name
                 else:
+                    # we need to read in reverse reads file separately
+                    rev_file_name = reverse_reads['id']
+                    if 'file_name' in reverse_reads:
+                        rev_file_name = reverse_reads['file_name']
                     ### NOTE: this section is what could also be replaced by the transform services
                     reverse_reads_file_location = os.path.join(self.scratch,rev_file_name)
                     reverse_reads_file = open(reverse_reads_file_location, 'w', 0)
