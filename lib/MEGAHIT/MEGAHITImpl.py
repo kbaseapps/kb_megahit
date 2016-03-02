@@ -127,8 +127,15 @@ class MEGAHIT:
                 else:
                     reverse_reads={}
 
+                fr_file_name = forward_reads['id']
+                if 'file_name' in forward_reads:
+                    fr_file_name = forward_reads['file_name']
+                rev_file_name = reverse_reads['id']
+                if 'file_name' in reverse_reads:
+                    rev_file_name = reverse_reads['file_name']
+                
                 ### NOTE: this section is what could be replaced by the transform services
-                forward_reads_file_location = os.path.join(self.scratch,forward_reads['file_name'])
+                forward_reads_file_location = os.path.join(self.scratch,fr_file_name)
                 forward_reads_file = open(forward_reads_file_location, 'w', 0)
                 self.log(console, 'downloading reads file: '+str(forward_reads_file_location))
                 headers = {'Authorization': 'OAuth '+ctx['token']}
@@ -141,7 +148,7 @@ class MEGAHIT:
 
                 if 'interleaved' in data and data['interleaved']:
                     self.log(console, 'extracting forward/reverse reads into separate files')
-                    if re.search('gz', forward_reads['file_name'], re.I):
+                    if re.search('gz', fr_file_name, re.I):
                         bcmdstring = 'gunzip -c ' + forward_reads_file_location
                     else:    
                         bcmdstring = 'cat ' + forward_reads_file_location 
@@ -152,11 +159,13 @@ class MEGAHIT:
 
                     self.log(console, "cmdstring: " + cmdstring + " stdout: " + stdout + " stderr: " + stderr)
                     
-                    forward_reads['file_name']='forward.fastq'
-                    reverse_reads['file_name']='reverse.fastq'
+                    fr_file_name = 'forward.fastq'
+                    forward_reads['file_name']=fr_file_name
+                    rev_file_name = 'reverse.fastq'
+                    reverse_reads['file_name']=rev_file_name
                 else:
                     ### NOTE: this section is what could also be replaced by the transform services
-                    reverse_reads_file_location = os.path.join(self.scratch,reverse_reads['file_name'])
+                    reverse_reads_file_location = os.path.join(self.scratch,rev_file_name)
                     reverse_reads_file = open(reverse_reads_file_location, 'w', 0)
                     self.log(console, 'downloading reverse reads file: '+str(reverse_reads_file_location))
                     r = requests.get(reverse_reads['url']+'/node/'+reverse_reads['id']+'?download', stream=True, headers=headers)
@@ -176,9 +185,9 @@ class MEGAHIT:
 
         # we only support PE reads, so add that
         megahit_cmd.append('-1')
-        megahit_cmd.append(forward_reads['file_name'])
+        megahit_cmd.append(fr_file_name)
         megahit_cmd.append('-2')
-        megahit_cmd.append(reverse_reads['file_name'])
+        megahit_cmd.append(rev_file_name)
 
         # if a preset is defined, use that:
         if 'megahit_parameter_preset' in params:
