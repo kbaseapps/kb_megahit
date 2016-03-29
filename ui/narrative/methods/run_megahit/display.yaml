@@ -1,9 +1,9 @@
 #
 # define display information
 #
-name: MEGAHIT - Assemble metagneomic reads
+name: Assemble with MEGAHIT
 tooltip: |
-	Run MEGAHIT for metagenome assembly
+	Assemble metagenomic reads using the MEGAHIT assembler.
 screenshots: []
 
 icon: megahit-blue.png
