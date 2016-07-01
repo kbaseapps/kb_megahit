@@ -21,7 +21,7 @@ RUN \
 COPY ./ /kb/module
 RUN mkdir -p /kb/module/work
 
-RUN make
+RUN make all
 
 ENTRYPOINT [ "./scripts/entrypoint.sh" ]
 
