@@ -20,6 +20,7 @@ class MegaHitTest(unittest.TestCase):
     def setUpClass(cls):
         token = environ.get('KB_AUTH_TOKEN', None)
         cls.ctx = {'token': token}
+        cls.token = token
         config_file = environ.get('KB_DEPLOYMENT_CONFIG', None)
         cls.cfg = {}
         config = ConfigParser()
@@ -61,16 +62,8 @@ class MegaHitTest(unittest.TestCase):
             return self.__class__.pairedEndLibInfo
         # 1) upload files to shock
         token = self.ctx['token']
-        forward_shock_file = self.upload_file_to_shock(
-            shock_service_url = self.shockURL,
-            filePath = 'data/small.forward.fq',
-            token = token
-            )
-        reverse_shock_file = self.upload_file_to_shock(
-            shock_service_url = self.shockURL,
-            filePath = 'data/small.reverse.fq',
-            token = token
-            )
+        forward_shock_file = self.upload_file_to_shock('data/small.forward.fq')
+        reverse_shock_file = self.upload_file_to_shock('data/small.reverse.fq')
         #pprint(forward_shock_file)
         #pprint(reverse_shock_file)
 
@@ -196,43 +189,27 @@ class MegaHitTest(unittest.TestCase):
         self.assertEqual(len(info_list),1)
         contigset_info = info_list[0]
         self.assertEqual(contigset_info[1],'output.contigset')
-        self.assertEqual(contigset_info[2].split('-')[0],'KBaseGenomes.ContigSet')
-        self.assertEqual(contigset_info[10]['Number contigs'],'2')
+        self.assertEqual(contigset_info[2].split('-')[0],'KBaseGenomeAnnotations.Assembly')
 
 
 
-
-    # Helper script borrowed from the transform service, logger removed
-    def upload_file_to_shock(self,
-                             shock_service_url = None,
-                             filePath = None,
-                             ssl_verify = True,
-                             token = None):
+    @classmethod
+    def upload_file_to_shock(cls, file_path):
         """
         Use HTTP multi-part POST to save a file to a SHOCK instance.
         """
 
-        if token is None:
-            raise Exception("Authentication token required!")
-
-        #build the header
         header = dict()
-        header["Authorization"] = "Oauth {0}".format(token)
+        header["Authorization"] = "Oauth {0}".format(cls.token)
 
-        if filePath is None:
+        if file_path is None:
             raise Exception("No file given for upload to SHOCK!")
 
-        dataFile = open(os.path.abspath(filePath), 'rb')
-        m = MultipartEncoder(fields={'upload': (os.path.split(filePath)[-1], dataFile)})
-        header['Content-Type'] = m.content_type
-
-        #logger.info("Sending {0} to {1}".format(filePath,shock_service_url))
-        try:
-            response = requests.post(shock_service_url + "/node", headers=header, data=m, allow_redirects=True, verify=ssl_verify)
-            dataFile.close()
-        except:
-            dataFile.close()
-            raise
+        with open(os.path.abspath(file_path), 'rb') as dataFile:
+            files = {'upload': dataFile}
+            response = requests.post(
+                cls.shockURL + '/node', headers=header, files=files,
+                stream=True, allow_redirects=True, timeout=30)
 
         if not response.ok:
             response.raise_for_status()
