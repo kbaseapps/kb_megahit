@@ -31,7 +31,7 @@
 		    "default_values" : [ "MEGAHIT.contigs" ],
 		    "field_type" : "text",
 		    "text_options" : {
-		     	"valid_ws_types" : [ "KBaseGenomes.ContigSet" ],
+		     	"valid_ws_types" : [ "KBaseGenomeAnnotations.Assembly" ],
 		    	"is_output_name":true
 		    }
 		},
