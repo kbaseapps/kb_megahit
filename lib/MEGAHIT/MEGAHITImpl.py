@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #BEGIN_HEADER
 import os
 import sys
@@ -37,6 +38,10 @@ class MEGAHIT:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     #########################################
+    VERSION = "2.0.0"
+    GIT_URL = "git@github.com:msneddon/kb_megahit.git"
+    GIT_COMMIT_HASH = "4f86bcb007e6163dbb91454c2fbd25b881d7cf07"
+    
     #BEGIN_CLASS_HEADER
     MEGAHIT = '/kb/module/megahit/megahit'
 
@@ -75,8 +80,44 @@ class MEGAHIT:
             os.makedirs(self.scratch)
         #END_CONSTRUCTOR
         pass
+    
 
     def run_megahit(self, ctx, params):
+        """
+        :param params: instance of type "MegaHitParams" (Run MEGAHIT.  Most
+           parameters here are just passed forward to MEGAHIT workspace_name
+           - the name of the workspace for input/output read_library_name -
+           the name of the PE read library (SE library support in the future)
+           output_contig_set_name - the name of the output contigset
+           megahit_parameter_preset - override a group of parameters;
+           possible values: meta            '--min-count 2 --k-list
+           21,41,61,81,99' (generic metagenomes, default) meta-sensitive 
+           '--min-count 2 --k-list 21,31,41,51,61,71,81,91,99' (more
+           sensitive but slower) meta-large      '--min-count 2 --k-list
+           27,37,47,57,67,77,87' (large & complex metagenomes, like soil)
+           bulk            '--min-count 3 --k-list 31,51,71,91,99 --no-mercy'
+           (experimental, standard bulk sequencing with >= 30x depth)
+           single-cell     '--min-count 3 --k-list 21,33,55,77,99,121
+           --merge_level 20,0.96' (experimental, single cell data) min_count
+           - minimum multiplicity for filtering (k_min+1)-mers, default 2
+           min_k - minimum kmer size (<= 127), must be odd number, default 21
+           max_k - maximum kmer size (<= 127), must be odd number, default 99
+           k_step - increment of kmer size of each iteration (<= 28), must be
+           even number, default 10 k_list - list of kmer size (all must be
+           odd, in the range 15-127, increment <= 28); override `--k-min',
+           `--k-max' and `--k-step' min_contig_length - minimum length of
+           contigs to output, default 200 @optional megahit_parameter_preset
+           @optional min_count @optional k_min @optional k_max @optional
+           k_step @optional k_list @optional min_contig_len) -> structure:
+           parameter "workspace_name" of String, parameter
+           "read_library_name" of String, parameter "output_contigset_name"
+           of String, parameter "megahit_parameter_preset" of String,
+           parameter "min_count" of Long, parameter "k_min" of Long,
+           parameter "k_max" of Long, parameter "k_step" of Long, parameter
+           "k_list" of list of Long, parameter "min_contig_len" of Long
+        :returns: instance of type "MegaHitOutput" -> structure: parameter
+           "report_name" of String, parameter "report_ref" of String
+        """
         # ctx is the context object
         # return variables are: output
         #BEGIN run_megahit
@@ -223,3 +264,10 @@ class MEGAHIT:
                              'output is not type dict as required.')
         # return the results
         return [output]
+
+    def status(self, ctx):
+        #BEGIN_STATUS
+        returnVal = {'state': "OK", 'message': "", 'version': self.VERSION, 
+                     'git_url': self.GIT_URL, 'git_commit_hash': self.GIT_COMMIT_HASH}
+        #END_STATUS
+        return [returnVal]
