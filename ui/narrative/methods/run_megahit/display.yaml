@@ -27,7 +27,7 @@ suggestions:
 # Configure the display and description of parameters
 #
 parameters :
-    read_library_name :
+    read_library_ref :
         ui-name : Read Library
         short-hint : Read library (only PairedEnd Libs supported now)
     output_contigset_name:
