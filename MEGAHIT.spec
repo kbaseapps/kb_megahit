@@ -8,7 +8,7 @@ module MEGAHIT {
 		Run MEGAHIT.  Most parameters here are just passed forward to MEGAHIT
 
 		workspace_name - the name of the workspace for input/output
-		read_library_name - the name of the PE read library (SE library support in the future)
+		read_library_ref - the name of the PE read library (SE library support in the future)
 		output_contig_set_name - the name of the output contigset
 
 		megahit_parameter_preset - 
@@ -45,7 +45,7 @@ module MEGAHIT {
 	*/
 	typedef structure {
 		string workspace_name;
-		string read_library_name;
+		string read_library_ref;
 		string output_contigset_name;
 
 		string megahit_parameter_preset;

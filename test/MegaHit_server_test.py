@@ -169,7 +169,7 @@ class MegaHitTest(unittest.TestCase):
         # run megahit
         params = {
             'workspace_name': pe_lib_info[7],
-            'read_library_name': pe_lib_info[1],
+            'read_library_ref': pe_lib_info[7] + '/' + pe_lib_info[1],
             'megahit_parameter_preset': 'meta',
             'output_contigset_name': 'output.contigset',
             #'min_count':2,
@@ -180,16 +180,16 @@ class MegaHitTest(unittest.TestCase):
             #'min_contig_length':199
         }
 
-        result = self.getImpl().run_megahit(self.getContext(),params)
+        result = self.getImpl().run_megahit(self.getContext(), params)
         print('RESULT:')
         pprint(result)
 
         # check the output
-        info_list = self.ws.get_object_info([{'ref':pe_lib_info[7] + '/output.contigset'}], 1)
-        self.assertEqual(len(info_list),1)
+        info_list = self.ws.get_object_info([{'ref': pe_lib_info[7] + '/output.contigset'}], 1)
+        self.assertEqual(len(info_list), 1)
         contigset_info = info_list[0]
-        self.assertEqual(contigset_info[1],'output.contigset')
-        self.assertEqual(contigset_info[2].split('-')[0],'KBaseGenomeAnnotations.Assembly')
+        self.assertEqual(contigset_info[1], 'output.contigset')
+        self.assertEqual(contigset_info[2].split('-')[0], 'KBaseGenomeAnnotations.Assembly')
 
 
 

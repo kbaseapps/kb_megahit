@@ -32,16 +32,16 @@ class MEGAHIT:
     A KBase module to wrap the MEGAHIT package.
     '''
 
-    ######## WARNING FOR GEVENT USERS #######
+    ######## WARNING FOR GEVENT USERS ####### noqa
     # Since asynchronous IO can lead to methods - even the same method -
     # interrupting each other, you must be *very* careful when using global
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
-    #########################################
+    ######################################### noqa
     VERSION = "2.0.0"
     GIT_URL = "git@github.com:msneddon/kb_megahit.git"
-    GIT_COMMIT_HASH = "4f86bcb007e6163dbb91454c2fbd25b881d7cf07"
-    
+    GIT_COMMIT_HASH = "0a62813d00b9dec4ec20a9c4edc409b97d691cbc"
+
     #BEGIN_CLASS_HEADER
     MEGAHIT = '/kb/module/megahit/megahit'
 
@@ -80,7 +80,7 @@ class MEGAHIT:
             os.makedirs(self.scratch)
         #END_CONSTRUCTOR
         pass
-    
+
 
     def run_megahit(self, ctx, params):
         """
@@ -131,14 +131,14 @@ class MEGAHIT:
         objref = ''
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
-        if 'read_library_name' not in params:
-            raise ValueError('read_library_name parameter is required')
+        if 'read_library_ref' not in params:
+            raise ValueError('read_library_ref parameter is required')
         if 'output_contigset_name' not in params:
             raise ValueError('output_contigset_name parameter is required')
 
         # STEP 2: get the read library as deinterleaved fastq files
-        input_ref = params['workspace_name']+'/'+params['read_library_name']
-        reads_params =  {
+        input_ref = params['read_library_ref']
+        reads_params = {
                             'read_libraries': [ input_ref ],
                             'interleaved' : 'false',
                             'gzipped': None # megahit don't care, so don't do any conversion one way or the other
@@ -264,7 +264,6 @@ class MEGAHIT:
                              'output is not type dict as required.')
         # return the results
         return [output]
-
     def status(self, ctx):
         #BEGIN_STATUS
         returnVal = {'state': "OK", 'message': "", 'version': self.VERSION, 
