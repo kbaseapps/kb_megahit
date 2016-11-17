@@ -4,11 +4,7 @@ MAINTAINER Michael Sneddon
 
 WORKDIR /kb/module
 
-# Make sure SSL certs are properly installed
-RUN apt-get install python-dev libffi-dev libssl-dev \
-    && pip install pyopenssl ndg-httpsclient pyasn1 \
-    && pip install requests --upgrade \
-    && pip install 'requests[security]' --upgrade
+RUN pip install --upgrade ndg-httpsclient
 
 # Install MEGAHIT
 RUN \
