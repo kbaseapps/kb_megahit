@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 #BEGIN_HEADER
 import os
-import sys
 import shutil
 import subprocess
 from datetime import datetime
@@ -10,12 +9,9 @@ from pprint import pprint
 import numpy as np
 from Bio import SeqIO
 
-
 from ReadsUtils.ReadsUtilsClient import ReadsUtils
-
 from AssemblyUtil.AssemblyUtilClient import AssemblyUtil
 from KBaseReport.KBaseReportClient import KBaseReport
-
 #END_HEADER
 
 
@@ -34,9 +30,9 @@ class MEGAHIT:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "2.0.0"
+    VERSION = "2.1.0"
     GIT_URL = "git@github.com:msneddon/kb_megahit.git"
-    GIT_COMMIT_HASH = "0a62813d00b9dec4ec20a9c4edc409b97d691cbc"
+    GIT_COMMIT_HASH = "c9873fa2347c1f925fc4ebd9a202082487de4c06"
 
     #BEGIN_CLASS_HEADER
     MEGAHIT = '/kb/module/megahit/megahit'
@@ -71,12 +67,12 @@ class MEGAHIT:
         """
         :param params: instance of type "MegaHitParams" (Run MEGAHIT.  Most
            parameters here are just passed forward to MEGAHIT workspace_name
-           - the name of the workspace for input/output read_library_name -
+           - the name of the workspace for input/output read_library_ref -
            the name of the PE read library (SE library support in the future)
            output_contig_set_name - the name of the output contigset
            megahit_parameter_preset - override a group of parameters;
            possible values: meta            '--min-count 2 --k-list
-           21,41,61,81,99' (generic metagenomes, default) meta-sensitive
+           21,41,61,81,99' (generic metagenomes, default) meta-sensitive 
            '--min-count 2 --k-list 21,31,41,51,61,71,81,91,99' (more
            sensitive but slower) meta-large      '--min-count 2 --k-list
            27,37,47,57,67,77,87' (large & complex metagenomes, like soil)
@@ -94,21 +90,18 @@ class MEGAHIT:
            contigs to output, default 200 @optional megahit_parameter_preset
            @optional min_count @optional k_min @optional k_max @optional
            k_step @optional k_list @optional min_contig_len) -> structure:
-           parameter "workspace_name" of String, parameter
-           "read_library_name" of String, parameter "output_contigset_name"
-           of String, parameter "megahit_parameter_preset" of String,
-           parameter "min_count" of Long, parameter "k_min" of Long,
-           parameter "k_max" of Long, parameter "k_step" of Long, parameter
-           "k_list" of list of Long, parameter "min_contig_len" of Long
+           parameter "workspace_name" of String, parameter "read_library_ref"
+           of String, parameter "output_contigset_name" of String, parameter
+           "megahit_parameter_preset" of String, parameter "min_count" of
+           Long, parameter "k_min" of Long, parameter "k_max" of Long,
+           parameter "k_step" of Long, parameter "k_list" of list of Long,
+           parameter "min_contig_len" of Long
         :returns: instance of type "MegaHitOutput" -> structure: parameter
            "report_name" of String, parameter "report_ref" of String
         """
         # ctx is the context object
         # return variables are: output
         #BEGIN run_megahit
-
-        SERVICE_VER = 'dev'
-
         print('Running run_megahit with params=')
         pprint(params)
 
@@ -126,7 +119,7 @@ class MEGAHIT:
                         'interleaved': 'false',
                         'gzipped': None
                         }
-        ru = ReadsUtils(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        ru = ReadsUtils(self.callbackURL)
         reads = ru.download_reads(reads_params)['files']
 
         print('Input reads files:')
@@ -204,7 +197,7 @@ class MEGAHIT:
             output_contigs = os.path.join(self.host_scratch, 'final.contigs.fa')
 
         # STEP 4: save the resulting assembly
-        assemblyUtil = AssemblyUtil(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        assemblyUtil = AssemblyUtil(self.callbackURL)
         output_data_ref = assemblyUtil.save_assembly_from_fasta({
                                                                 'file': {'path': output_contigs},
                                                                 'workspace_name': params['workspace_name'],
@@ -234,7 +227,7 @@ class MEGAHIT:
             'objects_created': [{'ref': output_data_ref, 'description': 'Assembled contigs'}],
             'text_message': report
         }
-        report = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report = KBaseReport(self.callbackURL)
         report_info = report.create({'report': reportObj, 'workspace_name': params['workspace_name']})
 
         # STEP 6: contruct the output to send back

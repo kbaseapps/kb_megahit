@@ -37,7 +37,7 @@ class MEGAHIT(object):
         """
         :param params: instance of type "MegaHitParams" (Run MEGAHIT.  Most
            parameters here are just passed forward to MEGAHIT workspace_name
-           - the name of the workspace for input/output read_library_name -
+           - the name of the workspace for input/output read_library_ref -
            the name of the PE read library (SE library support in the future)
            output_contig_set_name - the name of the output contigset
            megahit_parameter_preset - override a group of parameters;
@@ -60,12 +60,12 @@ class MEGAHIT(object):
            contigs to output, default 200 @optional megahit_parameter_preset
            @optional min_count @optional k_min @optional k_max @optional
            k_step @optional k_list @optional min_contig_len) -> structure:
-           parameter "workspace_name" of String, parameter
-           "read_library_name" of String, parameter "output_contigset_name"
-           of String, parameter "megahit_parameter_preset" of String,
-           parameter "min_count" of Long, parameter "k_min" of Long,
-           parameter "k_max" of Long, parameter "k_step" of Long, parameter
-           "k_list" of list of Long, parameter "min_contig_len" of Long
+           parameter "workspace_name" of String, parameter "read_library_ref"
+           of String, parameter "output_contigset_name" of String, parameter
+           "megahit_parameter_preset" of String, parameter "min_count" of
+           Long, parameter "k_min" of Long, parameter "k_max" of Long,
+           parameter "k_step" of Long, parameter "k_list" of list of Long,
+           parameter "min_contig_len" of Long
         :returns: instance of type "MegaHitOutput" -> structure: parameter
            "report_name" of String, parameter "report_ref" of String
         """

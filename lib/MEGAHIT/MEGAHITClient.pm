@@ -124,7 +124,7 @@ $params is a MEGAHIT.MegaHitParams
 $output is a MEGAHIT.MegaHitOutput
 MegaHitParams is a reference to a hash where the following keys are defined:
 	workspace_name has a value which is a string
-	read_library_name has a value which is a string
+	read_library_ref has a value which is a string
 	output_contigset_name has a value which is a string
 	megahit_parameter_preset has a value which is a string
 	min_count has a value which is an int
@@ -147,7 +147,7 @@ $params is a MEGAHIT.MegaHitParams
 $output is a MEGAHIT.MegaHitOutput
 MegaHitParams is a reference to a hash where the following keys are defined:
 	workspace_name has a value which is a string
-	read_library_name has a value which is a string
+	read_library_ref has a value which is a string
 	output_contigset_name has a value which is a string
 	megahit_parameter_preset has a value which is a string
 	min_count has a value which is an int
@@ -317,7 +317,7 @@ sub _validate_version {
 Run MEGAHIT.  Most parameters here are just passed forward to MEGAHIT
 
 workspace_name - the name of the workspace for input/output
-read_library_name - the name of the PE read library (SE library support in the future)
+read_library_ref - the name of the PE read library (SE library support in the future)
 output_contig_set_name - the name of the output contigset
 
 megahit_parameter_preset - 
@@ -360,7 +360,7 @@ min_contig_length - minimum length of contigs to output, default 200
 <pre>
 a reference to a hash where the following keys are defined:
 workspace_name has a value which is a string
-read_library_name has a value which is a string
+read_library_ref has a value which is a string
 output_contigset_name has a value which is a string
 megahit_parameter_preset has a value which is a string
 min_count has a value which is an int
@@ -378,7 +378,7 @@ min_contig_len has a value which is an int
 
 a reference to a hash where the following keys are defined:
 workspace_name has a value which is a string
-read_library_name has a value which is a string
+read_library_ref has a value which is a string
 output_contigset_name has a value which is a string
 megahit_parameter_preset has a value which is a string
 min_count has a value which is an int

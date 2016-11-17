@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * <pre>
  * Run MEGAHIT.  Most parameters here are just passed forward to MEGAHIT
  * workspace_name - the name of the workspace for input/output
- * read_library_name - the name of the PE read library (SE library support in the future)
+ * read_library_ref - the name of the PE read library (SE library support in the future)
  * output_contig_set_name - the name of the output contigset
  * megahit_parameter_preset - 
  *         override a group of parameters; possible values:
@@ -52,7 +52,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Generated("com.googlecode.jsonschema2pojo")
 @JsonPropertyOrder({
     "workspace_name",
-    "read_library_name",
+    "read_library_ref",
     "output_contigset_name",
     "megahit_parameter_preset",
     "min_count",
@@ -66,8 +66,8 @@ public class MegaHitParams {
 
     @JsonProperty("workspace_name")
     private String workspaceName;
-    @JsonProperty("read_library_name")
-    private String readLibraryName;
+    @JsonProperty("read_library_ref")
+    private String readLibraryRef;
     @JsonProperty("output_contigset_name")
     private String outputContigsetName;
     @JsonProperty("megahit_parameter_preset")
@@ -101,18 +101,18 @@ public class MegaHitParams {
         return this;
     }
 
-    @JsonProperty("read_library_name")
-    public String getReadLibraryName() {
-        return readLibraryName;
+    @JsonProperty("read_library_ref")
+    public String getReadLibraryRef() {
+        return readLibraryRef;
     }
 
-    @JsonProperty("read_library_name")
-    public void setReadLibraryName(String readLibraryName) {
-        this.readLibraryName = readLibraryName;
+    @JsonProperty("read_library_ref")
+    public void setReadLibraryRef(String readLibraryRef) {
+        this.readLibraryRef = readLibraryRef;
     }
 
-    public MegaHitParams withReadLibraryName(String readLibraryName) {
-        this.readLibraryName = readLibraryName;
+    public MegaHitParams withReadLibraryRef(String readLibraryRef) {
+        this.readLibraryRef = readLibraryRef;
         return this;
     }
 
@@ -248,7 +248,7 @@ public class MegaHitParams {
 
     @Override
     public String toString() {
-        return ((((((((((((((((((((((("MegaHitParams"+" [workspaceName=")+ workspaceName)+", readLibraryName=")+ readLibraryName)+", outputContigsetName=")+ outputContigsetName)+", megahitParameterPreset=")+ megahitParameterPreset)+", minCount=")+ minCount)+", kMin=")+ kMin)+", kMax=")+ kMax)+", kStep=")+ kStep)+", kList=")+ kList)+", minContigLen=")+ minContigLen)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((((((((((("MegaHitParams"+" [workspaceName=")+ workspaceName)+", readLibraryRef=")+ readLibraryRef)+", outputContigsetName=")+ outputContigsetName)+", megahitParameterPreset=")+ megahitParameterPreset)+", minCount=")+ minCount)+", kMin=")+ kMin)+", kMax=")+ kMax)+", kStep=")+ kStep)+", kList=")+ kList)+", minContigLen=")+ minContigLen)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }
