@@ -17,6 +17,8 @@ from Bio import SeqIO
 
 
 from kb_read_library_to_file.kb_read_library_to_fileClient import kb_read_library_to_file
+from ReadsUtils.ReadsUtilsClient import ReadsUtils
+
 from AssemblyUtil.AssemblyUtilClient import AssemblyUtil
 from KBaseReport.KBaseReportClient import KBaseReport
 
@@ -138,13 +140,12 @@ class MEGAHIT:
 
         # STEP 2: get the read library as deinterleaved fastq files
         input_ref = params['read_library_ref']
-        reads_params = {
-                            'read_libraries': [ input_ref ],
-                            'interleaved' : 'false',
-                            'gzipped': None # megahit don't care, so don't do any conversion one way or the other
+        reads_params = {'read_libraries': [input_ref],
+                        'interleaved': 'false',
+                        'gzipped': None # megahit don't care, so don't do any conversion one way or the other
                         }
-        readLibClient = kb_read_library_to_file(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
-        reads = readLibClient.convert_read_library_to_file(reads_params)['files']
+        ru = ReadsUtils(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        reads = ru.download_reads(reads_params)['files']
 
         print('Input reads files:')
         fwd = reads[input_ref]['files']['fwd']
@@ -221,10 +222,10 @@ class MEGAHIT:
         # STEP 4: save the resulting assembly
         assemblyUtil = AssemblyUtil(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
         output_data_ref = assemblyUtil.save_assembly_from_fasta(
-                                { 
-                                    'file':{'path':output_contigs},
-                                    'workspace_name':params['workspace_name'],
-                                    'assembly_name':params['output_contigset_name']
+                                {
+                                    'file': {'path': output_contigs},
+                                    'workspace_name': params['workspace_name'],
+                                    'assembly_name': params['output_contigset_name']
                                 })
 
 
