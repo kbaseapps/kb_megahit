@@ -3,20 +3,14 @@
 import os
 import sys
 import shutil
-import hashlib
 import subprocess
-import requests
-import re
-import traceback
-import uuid
 from datetime import datetime
-from pprint import pprint, pformat
+from pprint import pprint
 
 import numpy as np
 from Bio import SeqIO
 
 
-from kb_read_library_to_file.kb_read_library_to_fileClient import kb_read_library_to_file
 from ReadsUtils.ReadsUtilsClient import ReadsUtils
 
 from AssemblyUtil.AssemblyUtilClient import AssemblyUtil
@@ -46,17 +40,6 @@ class MEGAHIT:
 
     #BEGIN_CLASS_HEADER
     MEGAHIT = '/kb/module/megahit/megahit'
-
-    # target is a list for collecting log messages
-    def log(self, target, message):
-        # we should do something better here...
-        if target is not None:
-            target.append(message)
-        print(message)
-        sys.stdout.flush()
-
-
-
     #END_CLASS_HEADER
 
     # config contains contents of config file in a hash or None if it couldn't
@@ -69,13 +52,13 @@ class MEGAHIT:
 
         pprint(config)
 
-        # HACK!! for issue where megahit fails on mac running docker because of 
+        # HACK!! for issue where megahit fails on mac running docker because of
         # silent named pipe error in the volume mounted from mac
         self.mac_mode = False
         self.host_scratch = self.scratch
-        if 'mac-test-mode' in config and config['mac-test-mode']=='1':
+        if 'mac-test-mode' in config and config['mac-test-mode'] == '1':
             print('WARNING! running in mac test mode')
-            self.scratch = os.path.join('/kb','module','local_scratch')
+            self.scratch = os.path.join('/kb', 'module', 'local_scratch')
             self.mac_mode = True
         # end hack
         if not os.path.exists(self.scratch):
@@ -93,7 +76,7 @@ class MEGAHIT:
            output_contig_set_name - the name of the output contigset
            megahit_parameter_preset - override a group of parameters;
            possible values: meta            '--min-count 2 --k-list
-           21,41,61,81,99' (generic metagenomes, default) meta-sensitive 
+           21,41,61,81,99' (generic metagenomes, default) meta-sensitive
            '--min-count 2 --k-list 21,31,41,51,61,71,81,91,99' (more
            sensitive but slower) meta-large      '--min-count 2 --k-list
            27,37,47,57,67,77,87' (large & complex metagenomes, like soil)
@@ -130,7 +113,6 @@ class MEGAHIT:
         pprint(params)
 
         # STEP 1: basic parameter checks + parsing
-        objref = ''
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
         if 'read_library_ref' not in params:
@@ -142,7 +124,7 @@ class MEGAHIT:
         input_ref = params['read_library_ref']
         reads_params = {'read_libraries': [input_ref],
                         'interleaved': 'false',
-                        'gzipped': None # megahit don't care, so don't do any conversion one way or the other
+                        'gzipped': None
                         }
         ru = ReadsUtils(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
         reads = ru.download_reads(reads_params)['files']
@@ -150,8 +132,8 @@ class MEGAHIT:
         print('Input reads files:')
         fwd = reads[input_ref]['files']['fwd']
         rev = reads[input_ref]['files']['rev']
-        pprint('forward: '+fwd)
-        pprint('reverse: '+rev)
+        pprint('forward: ' + fwd)
+        pprint('reverse: ' + rev)
 
         # STEP 3: run megahit
         # construct the command
@@ -198,14 +180,14 @@ class MEGAHIT:
                 megahit_cmd.append(str(params['min_contig_len']))
 
         # set the output location
-        timestamp = int((datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds()*1000)
-        output_dir = os.path.join(self.scratch,'output.'+str(timestamp))
+        timestamp = int((datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds() * 1000)
+        output_dir = os.path.join(self.scratch, 'output.' + str(timestamp))
         megahit_cmd.append('-o')
         megahit_cmd.append(output_dir)
 
         # run megahit
         print('running megahit:')
-        print('    '+' '.join(megahit_cmd))
+        print('    ' + ' '.join(megahit_cmd))
         p = subprocess.Popen(megahit_cmd, cwd=self.scratch, shell=False)
         retcode = p.wait()
 
@@ -215,18 +197,19 @@ class MEGAHIT:
                              str(retcode) + '\n')
 
         output_contigs = os.path.join(output_dir, 'final.contigs.fa')
-        if self.mac_mode: # on macs, we cannot run megahit in the shared host scratch space, so we need to move the file there
+
+        # on macs, we cannot run megahit in the shared host scratch space, so we need to move the file there
+        if self.mac_mode:
             shutil.move(output_contigs, os.path.join(self.host_scratch, 'final.contigs.fa'))
             output_contigs = os.path.join(self.host_scratch, 'final.contigs.fa')
 
         # STEP 4: save the resulting assembly
         assemblyUtil = AssemblyUtil(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
-        output_data_ref = assemblyUtil.save_assembly_from_fasta(
-                                {
-                                    'file': {'path': output_contigs},
-                                    'workspace_name': params['workspace_name'],
-                                    'assembly_name': params['output_contigset_name']
-                                })
+        output_data_ref = assemblyUtil.save_assembly_from_fasta({
+                                                                'file': {'path': output_contigs},
+                                                                'workspace_name': params['workspace_name'],
+                                                                'assembly_name': params['output_contigset_name']
+                                                                })
 
 
         # STEP 5: generate and save the report
@@ -237,25 +220,25 @@ class MEGAHIT:
             lengths.append(len(seq_record.seq))
 
         report = ''
-        report += 'ContigSet saved to: '+params['workspace_name']+'/'+params['output_contigset_name']+'\n'
-        report += 'Assembled into '+str(len(lengths)) + ' contigs.\n'
-        report += 'Avg Length: '+str(sum(lengths)/float(len(lengths))) + ' bp.\n'
+        report += 'ContigSet saved to: ' + params['workspace_name'] + '/' + params['output_contigset_name'] + '\n'
+        report += 'Assembled into ' + str(len(lengths)) + ' contigs.\n'
+        report += 'Avg Length: ' + str(sum(lengths) / float(len(lengths))) + ' bp.\n'
 
         bins = 10
         counts, edges = np.histogram(lengths, bins)
         report += 'Contig Length Distribution (# of contigs -- min to max basepairs):\n'
         for c in range(bins):
-            report += '   '+str(counts[c]) + '\t--\t' + str(edges[c]) + ' to ' + str(edges[c+1]) + ' bp\n'
+            report += '   ' + str(counts[c]) + '\t--\t' + str(edges[c]) + ' to ' + str(edges[c + 1]) + ' bp\n'
 
         reportObj = {
-            'objects_created':[{'ref':output_data_ref, 'description':'Assembled contigs'}],
-            'text_message':report
+            'objects_created': [{'ref': output_data_ref, 'description': 'Assembled contigs'}],
+            'text_message': report
         }
         report = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
-        report_info = report.create({'report':reportObj, 'workspace_name':params['workspace_name']})
+        report_info = report.create({'report': reportObj, 'workspace_name': params['workspace_name']})
 
         # STEP 6: contruct the output to send back
-        output = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
+        output = {'report_name': report_info['name'], 'report_ref': report_info['ref']}
 
         #END run_megahit
 
@@ -267,7 +250,7 @@ class MEGAHIT:
         return [output]
     def status(self, ctx):
         #BEGIN_STATUS
-        returnVal = {'state': "OK", 'message': "", 'version': self.VERSION, 
+        returnVal = {'state': "OK", 'message': "", 'version': self.VERSION,
                      'git_url': self.GIT_URL, 'git_commit_hash': self.GIT_COMMIT_HASH}
         #END_STATUS
         return [returnVal]
