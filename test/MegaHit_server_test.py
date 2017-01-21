@@ -3,6 +3,7 @@ import os
 import json
 import time
 import requests
+import shutil
 
 from os import environ
 from ConfigParser import ConfigParser
@@ -12,6 +13,7 @@ from pprint import pprint
 from biokbase.workspace.client import Workspace as workspaceService
 from biokbase.AbstractHandle.Client import AbstractHandle as HandleService
 from MEGAHIT.MEGAHITImpl import MEGAHIT
+from ReadsUtils.ReadsUtilsClient import ReadsUtils
 
 
 class MegaHitTest(unittest.TestCase):
@@ -51,7 +53,7 @@ class MegaHitTest(unittest.TestCase):
             return self.__class__.wsName
         suffix = int(time.time() * 1000)
         wsName = "temp_test_MegaHit_" + str(suffix)
-        ret = self.ws.create_workspace({'workspace': wsName})
+        self.ws.create_workspace({'workspace': wsName})
         self.__class__.wsName = wsName
         return wsName
 
@@ -61,77 +63,21 @@ class MegaHitTest(unittest.TestCase):
         if hasattr(self.__class__, 'pairedEndLibInfo'):
             return self.__class__.pairedEndLibInfo
         # 1) upload files to shock
-        token = self.ctx['token']
-        forward_shock_file = self.upload_file_to_shock('data/small.forward.fq')
-        reverse_shock_file = self.upload_file_to_shock('data/small.reverse.fq')
-        #pprint(forward_shock_file)
-        #pprint(reverse_shock_file)
+        shared_dir = "/kb/module/work/tmp"
+        forward_data_file = 'data/small.forward.fq'
+        forward_file = os.path.join(shared_dir, os.path.basename(forward_data_file))
+        shutil.copy(forward_data_file, forward_file)
+        reverse_data_file = 'data/small.reverse.fq'
+        reverse_file = os.path.join(shared_dir, os.path.basename(reverse_data_file))
+        shutil.copy(reverse_data_file, reverse_file)
 
-        # 2) create handle
-        hs = HandleService(url=self.handleURL, token=token)
-        forward_handle = hs.persist_handle({
-                                        'id' : forward_shock_file['id'], 
-                                        'type' : 'shock',
-                                        'url' : self.shockURL,
-                                        'file_name': forward_shock_file['file']['name'],
-                                        'remote_md5': forward_shock_file['file']['checksum']['md5']})
+        ru = ReadsUtils(os.environ['SDK_CALLBACK_URL'])
+        paired_end_ref = ru.upload_reads({'fwd_file': forward_file, 'rev_file': reverse_file,
+                                          'sequencing_tech':'artificial reads', 
+                                          'interleaved': 0, 'wsname': self.getWsName(),
+                                          'name': 'test.pe.reads'})['obj_ref']
 
-        reverse_handle = hs.persist_handle({
-                                        'id' : reverse_shock_file['id'], 
-                                        'type' : 'shock',
-                                        'url' : self.shockURL,
-                                        'file_name': reverse_shock_file['file']['name'],
-                                        'remote_md5': reverse_shock_file['file']['checksum']['md5']})
-
-        # 3) save to WS
-        paired_end_library = {
-            'lib1': {
-                'file': {
-                    'hid':forward_handle,
-                    'file_name': forward_shock_file['file']['name'],
-                    'id': forward_shock_file['id'],
-                    'url': self.shockURL,
-                    'type':'shock',
-                    'remote_md5':forward_shock_file['file']['checksum']['md5']
-                },
-                'encoding':'UTF8',
-                'type':'fastq',
-                'size':forward_shock_file['file']['size']
-            },
-            'lib2': {
-                'file': {
-                    'hid':reverse_handle,
-                    'file_name': reverse_shock_file['file']['name'],
-                    'id': reverse_shock_file['id'],
-                    'url': self.shockURL,
-                    'type':'shock',
-                    'remote_md5':reverse_shock_file['file']['checksum']['md5']
-                },
-                'encoding':'UTF8',
-                'type':'fastq',
-                'size':reverse_shock_file['file']['size']
-
-            },
-            'interleaved':0,
-            'sequencing_tech':'artificial reads'
-        }
-
-        new_obj_info = self.ws.save_objects({
-                        'workspace':self.getWsName(),
-                        'objects':[
-                            {
-                                'type':'KBaseFile.PairedEndLibrary',
-                                'data':paired_end_library,
-                                'name':'test.pe.reads',
-                                'meta':{},
-                                'provenance':[
-                                    {
-                                        'service':'MEGAHIT',
-                                        'method':'test_megahit'
-                                    }
-                                ]
-                            }]
-                        })
+        new_obj_info = self.ws.get_object_info_new({'objects': [{'ref': paired_end_ref}]})
         self.__class__.pairedEndLibInfo = new_obj_info[0]
         return new_obj_info[0]
 
@@ -146,7 +92,7 @@ class MegaHitTest(unittest.TestCase):
         return self.__class__.ctx
 
 
-    def test_run_megahit(self):
+    def te_st_run_megahit(self):
 
         # figure out where the test data lives
         pe_lib_info = self.getPairedEndLibInfo()
@@ -191,32 +137,3 @@ class MegaHitTest(unittest.TestCase):
         self.assertEqual(contigset_info[1], 'output.contigset')
         self.assertEqual(contigset_info[2].split('-')[0], 'KBaseGenomeAnnotations.Assembly')
 
-
-
-    @classmethod
-    def upload_file_to_shock(cls, file_path):
-        """
-        Use HTTP multi-part POST to save a file to a SHOCK instance.
-        """
-
-        header = dict()
-        header["Authorization"] = "Oauth {0}".format(cls.token)
-
-        if file_path is None:
-            raise Exception("No file given for upload to SHOCK!")
-
-        with open(os.path.abspath(file_path), 'rb') as dataFile:
-            files = {'upload': dataFile}
-            response = requests.post(
-                cls.shockURL + '/node', headers=header, files=files,
-                stream=True, allow_redirects=True, timeout=30)
-
-        if not response.ok:
-            response.raise_for_status()
-
-        result = response.json()
-
-        if result['error']:
-            raise Exception(result['error'][0])
-        else:
-            return result["data"]
