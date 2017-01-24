@@ -4,7 +4,7 @@ MAINTAINER Michael Sneddon
 
 WORKDIR /kb/module
 
-RUN pip install --upgrade ndg-httpsclient
+# RUN pip install --upgrade ndg-httpsclient
 
 # Install MEGAHIT
 RUN \
