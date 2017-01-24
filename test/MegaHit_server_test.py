@@ -92,7 +92,7 @@ class MegaHitTest(unittest.TestCase):
         return self.__class__.ctx
 
 
-    def te_st_run_megahit(self):
+    def test_run_megahit(self):
 
         # figure out where the test data lives
         pe_lib_info = self.getPairedEndLibInfo()
