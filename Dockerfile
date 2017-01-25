@@ -4,7 +4,12 @@ MAINTAINER Michael Sneddon
 
 WORKDIR /kb/module
 
-# RUN pip install --upgrade ndg-httpsclient
+RUN pip install cffi --upgrade \
+    && pip install pyopenssl --upgrade \
+    && pip install ndg-httpsclient --upgrade \
+    && pip install pyasn1 --upgrade \
+    && pip install requests --upgrade \
+    && pip install 'requests[security]' --upgrade
 
 # Install MEGAHIT
 RUN \
