@@ -143,4 +143,13 @@ class MegaHitTest(unittest.TestCase):
         pprint(rep)
 
         self.assertEqual(rep['info'][1].rsplit('_', 1)[0], 'kb_megahit_report')
-        # TODO check rest of report
+        self.assertEqual(rep['info'][2].split('-', 1)[0], 'KBaseReport.Report')
+        self.assertEqual(rep['info'][7].rsplit('_', 1)[0], 'temp_test_MegaHit')
+        d = rep['data']
+        self.assertEqual(d['direct_html_link_index'], 0)
+        self.assertEqual(len(d['html_links']), 1)
+        ht = d['html_links'][0]
+        self.assertEqual(ht['URL'].split('/node')[0], self.shockURL)
+        self.assertEqual(ht['handle'].split('_', 1)[0], 'KBH')
+        self.assertEqual(ht['label'], 'QUAST report')
+        self.assertEqual(ht['name'], 'report.html')
