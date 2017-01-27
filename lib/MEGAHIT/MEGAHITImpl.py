@@ -5,6 +5,7 @@ import shutil
 import subprocess
 from datetime import datetime
 from pprint import pprint
+import uuid
 
 import numpy as np
 from Bio import SeqIO
@@ -12,6 +13,9 @@ from Bio import SeqIO
 from ReadsUtils.ReadsUtilsClient import ReadsUtils
 from AssemblyUtil.AssemblyUtilClient import AssemblyUtil
 from KBaseReport.KBaseReportClient import KBaseReport
+from KBaseReport.baseclient import ServerError as _RepError
+from kb_quast.kb_quastClient import kb_quast
+from kb_quast.baseclient import ServerError as QUASTError
 #END_HEADER
 
 
@@ -223,12 +227,40 @@ class MEGAHIT:
         for c in range(bins):
             report += '   ' + str(counts[c]) + '\t--\t' + str(edges[c]) + ' to ' + str(edges[c + 1]) + ' bp\n'
 
-        reportObj = {
-            'objects_created': [{'ref': output_data_ref, 'description': 'Assembled contigs'}],
-            'text_message': report
-        }
-        report = KBaseReport(self.callbackURL)
-        report_info = report.create({'report': reportObj, 'workspace_name': params['workspace_name']})
+        print('Running QUAST')
+        kbq = kb_quast(self.callbackURL)
+        try:
+            quastret = kbq.run_QUAST({'files': [{'path': output_contigs,
+                                                 'label': params['output_contigset_name']}]})
+        except QUASTError as qe:
+            # not really any way to test this, all inputs have been checked earlier and should be
+            # ok 
+            print('Logging exception from running QUAST')
+            print(str(qe))
+            # TODO delete shock node
+            raise
+
+        print('Saving report')
+        kbr = KBaseReport(self.callbackURL)
+        try:
+            report_info = kbr.create_extended_report(
+                {'message': report,
+                 'objects_created': [{'ref': output_data_ref, 'description': 'Assembled contigs'}],
+                 'direct_html_link_index': 0,
+                 'html_links': [{'shock_id': quastret['shock_id'],
+                                 'name': 'report.html',
+                                 'label': 'QUAST report'}
+                                ],
+                 'report_object_name': 'kb_megahit_report_' + str(uuid.uuid4()),
+                 'workspace_name': params['workspace_name']
+                 })
+        except _RepError as re:
+            # not really any way to test this, all inputs have been checked earlier and should be
+            # ok 
+            print('Logging exception from creating report object')
+            print(str(re))
+            # TODO delete shock node
+            raise
 
         # STEP 6: contruct the output to send back
         output = {'report_name': report_info['name'], 'report_ref': report_info['ref']}

@@ -21,6 +21,9 @@ RUN \
 # copy local wrapper files, and build
 COPY ./ /kb/module
 RUN mkdir -p /kb/module/work
+RUN chmod -R a+rw /kb/module
+
+WORKDIR /kb/module
 
 RUN make all
 

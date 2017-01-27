@@ -10,7 +10,7 @@ from ConfigParser import ConfigParser
 from requests_toolbelt import MultipartEncoder
 from pprint import pprint
 
-from biokbase.workspace.client import Workspace as workspaceService
+from Workspace.WorkspaceClient import Workspace as workspaceService
 from biokbase.AbstractHandle.Client import AbstractHandle as HandleService
 from MEGAHIT.MEGAHITImpl import MEGAHIT
 from ReadsUtils.ReadsUtilsClient import ReadsUtils
@@ -137,3 +137,10 @@ class MegaHitTest(unittest.TestCase):
         self.assertEqual(contigset_info[1], 'output.contigset')
         self.assertEqual(contigset_info[2].split('-')[0], 'KBaseGenomeAnnotations.Assembly')
 
+        # check the report. We assume that kb_quast and KBaseReport do what they're supposed to do
+        rep = self.ws.get_objects2({'objects': [{'ref': result[0]['report_ref']}]})['data'][0]
+        print('REPORT object:')
+        pprint(rep)
+
+        self.assertEqual(rep['info'][1].rsplit('_', 1)[0], 'kb_megahit_report')
+        # TODO check rest of report
