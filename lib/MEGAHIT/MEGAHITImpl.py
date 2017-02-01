@@ -11,6 +11,7 @@ import numpy as np
 from Bio import SeqIO
 
 from ReadsUtils.ReadsUtilsClient import ReadsUtils
+from ReadsUtils.baseclient import ServerError as _ReadsError
 from AssemblyUtil.AssemblyUtilClient import AssemblyUtil
 from KBaseReport.KBaseReportClient import KBaseReport
 from KBaseReport.baseclient import ServerError as _RepError
@@ -124,7 +125,12 @@ class MEGAHIT:
                         'gzipped': None
                         }
         ru = ReadsUtils(self.callbackURL)
-        reads = ru.download_reads(reads_params)['files']
+        try:
+            reads = ru.download_reads(reads_params)['files']
+        except _ReadsError as re:
+            print('Logging error from ReadsUtils:')
+            print(str(re))
+            raise
 
         print('Input reads files:')
         fwd = reads[input_ref]['files']['fwd']
