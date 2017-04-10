@@ -35,8 +35,8 @@ class MEGAHIT:
     # the latter method is running.
     ######################################### noqa
     VERSION = "2.2.1"
-    GIT_URL = "https://github.com/rsutormin/kb_megahit"
-    GIT_COMMIT_HASH = "823ac50983c571d95c9a0cdb3768ef85dcc70d92"
+    GIT_URL = "git@github.com:msneddon/kb_megahit.git"
+    GIT_COMMIT_HASH = "28d0ebb00a3e84db777766f9561175f2de01c66d"
 
     #BEGIN_CLASS_HEADER
     MEGAHIT = '/kb/module/megahit/megahit'
@@ -50,7 +50,7 @@ class MEGAHIT:
         self.scratch = os.path.abspath(config['scratch'])
         self.callbackURL = os.environ['SDK_CALLBACK_URL']
 
-        pprint(config)
+        self.DEFAULT_MIN_CONTIG_LENGTH = 500
 
         # HACK!! for issue where megahit fails on mac running docker because of
         # silent named pipe error in the volume mounted from mac
@@ -91,11 +91,12 @@ class MEGAHIT:
            even number, default 10 k_list - list of kmer size (all must be
            odd, in the range 15-127, increment <= 28); override `--k-min',
            `--k-max' and `--k-step' min_contig_length - minimum length of
-           contigs to output, default 200 @optional megahit_parameter_preset
-           @optional min_count @optional k_min @optional k_max @optional
-           k_step @optional k_list @optional min_contig_len) -> structure:
-           parameter "workspace_name" of String, parameter "read_library_ref"
-           of String, parameter "output_contigset_name" of String, parameter
+           contigs to output, default is 500 @optional
+           megahit_parameter_preset @optional min_count @optional k_min
+           @optional k_max @optional k_step @optional k_list @optional
+           min_contig_len) -> structure: parameter "workspace_name" of
+           String, parameter "read_library_ref" of String, parameter
+           "output_contigset_name" of String, parameter
            "megahit_parameter_preset" of String, parameter "min_count" of
            Long, parameter "k_min" of Long, parameter "k_max" of Long,
            parameter "k_step" of Long, parameter "k_list" of list of Long,
@@ -171,10 +172,17 @@ class MEGAHIT:
                     k_list.append(str(k_val))
                 megahit_cmd.append('--k-list')
                 megahit_cmd.append(','.join(k_list))
+
+        min_contig_len = self.DEFAULT_MIN_CONTIG_LENGTH
         if 'min_contig_len' in params:
             if params['min_contig_len']:
-                megahit_cmd.append('--min-contig-len')
-                megahit_cmd.append(str(params['min_contig_len']))
+                if str(params['min_contig_len']).isdigit():
+                    min_contig_len = params['min_contig_len']
+                else:
+                    raise ValueError('min_contig_len parameter must be a non-negative integer')
+
+        megahit_cmd.append('--min-contig-len')
+        megahit_cmd.append(str(min_contig_len))
 
         # set the output location
         timestamp = int((datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds() * 1000)

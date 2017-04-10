@@ -15,7 +15,7 @@ RUN pip install cffi --upgrade \
 RUN \
   git clone https://github.com/voutcn/megahit.git && \
   cd megahit && \
-  git checkout tags/v1.0.6 && \
+  git checkout tags/v1.1.1 && \
   make
 
 # copy local wrapper files, and build
