@@ -73,7 +73,7 @@ class MegaHitTest(unittest.TestCase):
 
         ru = ReadsUtils(os.environ['SDK_CALLBACK_URL'])
         paired_end_ref = ru.upload_reads({'fwd_file': forward_file, 'rev_file': reverse_file,
-                                          'sequencing_tech':'artificial reads', 
+                                          'sequencing_tech': 'artificial reads',
                                           'interleaved': 0, 'wsname': self.getWsName(),
                                           'name': 'test.pe.reads'})['obj_ref']
 
@@ -116,14 +116,14 @@ class MegaHitTest(unittest.TestCase):
         params = {
             'workspace_name': pe_lib_info[7],
             'read_library_ref': pe_lib_info[7] + '/' + pe_lib_info[1],
-            'megahit_parameter_preset': 'meta',
+            'megahit_parameter_preset': 'meta-sensitive',
             'output_contigset_name': 'output.contigset',
-            #'min_count':2,
-            #'k_min':31,
-            #'k_max':51,
-            #'k_step':10,
-            #'k_list':[31,41],
-            #'min_contig_length':199
+            # 'min_count':2,
+            # 'k_min':31,
+            # 'k_max':51,
+            # 'k_step':10,
+            # 'k_list':[31,41],
+            # 'min_contig_length':199
         }
 
         result = self.getImpl().run_megahit(self.getContext(), params)
@@ -153,3 +153,33 @@ class MegaHitTest(unittest.TestCase):
         self.assertEqual(ht['handle'].split('_', 1)[0], 'KBH')
         self.assertEqual(ht['label'], 'QUAST report')
         self.assertEqual(ht['name'], 'report.html')
+
+
+
+
+    def test_run_megahit_with_min_contig_len(self):
+
+        # figure out where the test data lives
+        pe_lib_info = self.getPairedEndLibInfo()
+
+        # run megahit
+        params = {
+            'workspace_name': pe_lib_info[7],
+            'read_library_ref': pe_lib_info[7] + '/' + pe_lib_info[1],
+            'output_contigset_name': 'trimmed.output.contigset',
+            'min_contig_len': 63000
+        }
+
+        result = self.getImpl().run_megahit(self.getContext(), params)
+        print('RESULT:')
+        pprint(result)
+
+        # check the output
+        info_list = self.ws.get_object_info([{'ref': pe_lib_info[7] + '/trimmed.output.contigset'}], 1)
+        self.assertEqual(len(info_list), 1)
+        contigset_info = info_list[0]
+        self.assertEqual(contigset_info[1], 'trimmed.output.contigset')
+        self.assertEqual(contigset_info[2].split('-')[0], 'KBaseGenomeAnnotations.Assembly')
+        self.assertEqual(contigset_info[10]['Size'], '64794')
+
+

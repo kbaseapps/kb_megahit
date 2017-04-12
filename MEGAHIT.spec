@@ -33,7 +33,7 @@ module MEGAHIT {
         k_list - list of kmer size (all must be odd, in the range 15-127, increment <= 28);
                  override `--k-min', `--k-max' and `--k-step'
 
-		min_contig_length - minimum length of contigs to output, default 200
+		min_contig_length - minimum length of contigs to output, default is 500
 
 		@optional megahit_parameter_preset
 		@optional min_count
