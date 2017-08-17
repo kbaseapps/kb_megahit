@@ -88,7 +88,7 @@
 			"text_options" : {
 			    "validate_as": "int",
       			"min_int" : 1,
-      			"max_int" : 127
+      			"max_int" : 255
 		    }
 		},
 		{
@@ -110,12 +110,7 @@
 		    "advanced" : true,
 		    "allow_multiple" : true,
 		    "default_values" : [ "" ],
-		    "field_type" : "text",
-			"text_options" : {
-			    "validate_as": "int",
-      			"min_int" : 15,
-      			"max_int" : 127
-		    }
+		    "field_type" : "text"
 		},
 		{
 		    "id" : "min_contig_len",
