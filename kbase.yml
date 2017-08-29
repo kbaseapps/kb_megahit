@@ -11,8 +11,8 @@ service-language:
     python
 
 module-version:
-    2.2.4
+    2.2.6
 
 owners:
-    [msneddon, rsutormin]
+    [msneddon, rsutormin, dylan]
 

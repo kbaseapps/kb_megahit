@@ -44,7 +44,7 @@ parameters :
         short-hint : 'minimum multiplicity for filtering (k_min+1)-mers, default 2'
     k_min:
         ui-name : '--k-min'
-        short-hint : 'minimum kmer size (<= 255), must be odd number, default 21'
+        short-hint : 'minimum kmer size (<= 127), must be odd number, default 21'
     k_max:
         ui-name : '--k-max'
         short-hint : 'maximum kmer size (<= 255), must be odd number, default 141'

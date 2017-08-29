@@ -1,8 +1,8 @@
 {
-	"ver": "1.0.4",
+	"ver": "2.2.6",
 	
 	"authors": [
-		"msneddon"
+		"msneddon", "dylan"
 	],
 	"contact": "help@kbase.us",
 	"visible": true,
@@ -88,7 +88,7 @@
 			"text_options" : {
 			    "validate_as": "int",
       			"min_int" : 1,
-      			"max_int" : 127
+      			"max_int" : 255
 		    }
 		},
 		{
@@ -111,11 +111,11 @@
 		    "allow_multiple" : true,
 		    "default_values" : [ "" ],
 		    "field_type" : "text",
-			"text_options" : {
-			    "validate_as": "int",
-      			"min_int" : 15,
-      			"max_int" : 127
-		    }
+		    "text_options" : {
+			"validate_as": "int",
+			"min_int" : 15,
+			"max_int" : 255
+		    }		    
 		},
 		{
 		    "id" : "min_contig_len",
