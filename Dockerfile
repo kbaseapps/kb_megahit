@@ -28,6 +28,7 @@ RUN pip install requests --upgrade \
 
 
 # Install MEGAHIT
+WORKDIR /kb/module
 RUN \
   git clone https://github.com/voutcn/megahit.git && \
   cd megahit && \
