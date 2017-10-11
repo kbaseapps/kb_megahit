@@ -37,14 +37,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  *         k_step - increment of kmer size of each iteration (<= 28), must be even number, default 10
  *         k_list - list of kmer size (all must be odd, in the range 15-127, increment <= 28);
  *  override `--k-min', `--k-max' and `--k-step'
- * min_contig_length - minimum length of contigs to output, default is 500
+ * min_contig_length - minimum length of contigs to output, default is 2000
  * @optional megahit_parameter_preset
  * @optional min_count
  * @optional k_min
  * @optional k_max
  * @optional k_step
  * @optional k_list
- * @optional min_contig_len
+ * @optional min_contig_length
  * </pre>
  * 
  */
@@ -60,7 +60,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "k_max",
     "k_step",
     "k_list",
-    "min_contig_len"
+    "min_contig_length"
 })
 public class MegaHitParams {
 
@@ -82,8 +82,8 @@ public class MegaHitParams {
     private java.lang.Long kStep;
     @JsonProperty("k_list")
     private List<Long> kList;
-    @JsonProperty("min_contig_len")
-    private java.lang.Long minContigLen;
+    @JsonProperty("min_contig_length")
+    private java.lang.Long minContigLength;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("workspace_name")
@@ -221,18 +221,18 @@ public class MegaHitParams {
         return this;
     }
 
-    @JsonProperty("min_contig_len")
-    public java.lang.Long getMinContigLen() {
-        return minContigLen;
+    @JsonProperty("min_contig_length")
+    public java.lang.Long getMinContigLength() {
+        return minContigLength;
     }
 
-    @JsonProperty("min_contig_len")
-    public void setMinContigLen(java.lang.Long minContigLen) {
-        this.minContigLen = minContigLen;
+    @JsonProperty("min_contig_length")
+    public void setMinContigLength(java.lang.Long minContigLength) {
+        this.minContigLength = minContigLength;
     }
 
-    public MegaHitParams withMinContigLen(java.lang.Long minContigLen) {
-        this.minContigLen = minContigLen;
+    public MegaHitParams withMinContigLength(java.lang.Long minContigLength) {
+        this.minContigLength = minContigLength;
         return this;
     }
 
@@ -248,7 +248,7 @@ public class MegaHitParams {
 
     @Override
     public String toString() {
-        return ((((((((((((((((((((((("MegaHitParams"+" [workspaceName=")+ workspaceName)+", readLibraryRef=")+ readLibraryRef)+", outputContigsetName=")+ outputContigsetName)+", megahitParameterPreset=")+ megahitParameterPreset)+", minCount=")+ minCount)+", kMin=")+ kMin)+", kMax=")+ kMax)+", kStep=")+ kStep)+", kList=")+ kList)+", minContigLen=")+ minContigLen)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((((((((((("MegaHitParams"+" [workspaceName=")+ workspaceName)+", readLibraryRef=")+ readLibraryRef)+", outputContigsetName=")+ outputContigsetName)+", megahitParameterPreset=")+ megahitParameterPreset)+", minCount=")+ minCount)+", kMin=")+ kMin)+", kMax=")+ kMax)+", kStep=")+ kStep)+", kList=")+ kList)+", minContigLength=")+ minContigLength)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

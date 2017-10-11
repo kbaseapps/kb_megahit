@@ -1,5 +1,5 @@
 {
-	"ver": "2.2.6",
+	"ver": "2.2.7",
 	
 	"authors": [
 		"msneddon", "dylan"
@@ -118,15 +118,15 @@
 		    }		    
 		},
 		{
-		    "id" : "min_contig_len",
-		    "optional" : true,
-		    "advanced" : true,
+		    "id" : "min_contig_length",
+		    "optional" : false,
+		    "advanced" : false,
 		    "allow_multiple" : false,
-		    "default_values" : [ "500" ],
+		    "default_values" : [ "2000" ],
 		    "field_type" : "text",
-			"text_options" : {
-			    "validate_as": "int",
-      			"min_int" : 1
+		    "text_options" : {
+			"validate_as": "int",
+      			"min_int" : 300
 		    }
 		}
 	],
@@ -174,8 +174,8 @@
           			"target_property": "k_list"
 				},
 				{
-					"input_parameter": "min_contig_len",
-          			"target_property": "min_contig_len"
+					"input_parameter": "min_contig_length",
+          			"target_property": "min_contig_length"
 				}
 			],
 			"output_mapping": [
