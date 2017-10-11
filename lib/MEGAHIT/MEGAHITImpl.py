@@ -36,7 +36,7 @@ class MEGAHIT:
     ######################################### noqa
     VERSION = "2.2.7"
     GIT_URL = "https://github.com/dcchivian/kb_megahit"
-    GIT_COMMIT_HASH = "522ab1940bebb5a8d25972112f70682f4e952ed4"
+    GIT_COMMIT_HASH = "0e8e31ce50ed58dfebd385b099571bb55b26c0e7"
 
     #BEGIN_CLASS_HEADER
     MEGAHIT = '/kb/module/megahit/megahit'
