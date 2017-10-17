@@ -57,16 +57,16 @@ class MEGAHIT(object):
            even number, default 10 k_list - list of kmer size (all must be
            odd, in the range 15-127, increment <= 28); override `--k-min',
            `--k-max' and `--k-step' min_contig_length - minimum length of
-           contigs to output, default is 500 @optional
+           contigs to output, default is 2000 @optional
            megahit_parameter_preset @optional min_count @optional k_min
            @optional k_max @optional k_step @optional k_list @optional
-           min_contig_len) -> structure: parameter "workspace_name" of
+           min_contig_length) -> structure: parameter "workspace_name" of
            String, parameter "read_library_ref" of String, parameter
            "output_contigset_name" of String, parameter
            "megahit_parameter_preset" of String, parameter "min_count" of
            Long, parameter "k_min" of Long, parameter "k_max" of Long,
            parameter "k_step" of Long, parameter "k_list" of list of Long,
-           parameter "min_contig_len" of Long
+           parameter "min_contig_length" of Long
         :returns: instance of type "MegaHitOutput" -> structure: parameter
            "report_name" of String, parameter "report_ref" of String
         """

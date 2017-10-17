@@ -131,7 +131,7 @@ MegaHitParams is a reference to a hash where the following keys are defined:
 	k_max has a value which is an int
 	k_step has a value which is an int
 	k_list has a value which is a reference to a list where each element is an int
-	min_contig_len has a value which is an int
+	min_contig_length has a value which is an int
 MegaHitOutput is a reference to a hash where the following keys are defined:
 	report_name has a value which is a string
 	report_ref has a value which is a string
@@ -154,7 +154,7 @@ MegaHitParams is a reference to a hash where the following keys are defined:
 	k_max has a value which is an int
 	k_step has a value which is an int
 	k_list has a value which is a reference to a list where each element is an int
-	min_contig_len has a value which is an int
+	min_contig_length has a value which is an int
 MegaHitOutput is a reference to a hash where the following keys are defined:
 	report_name has a value which is a string
 	report_ref has a value which is a string
@@ -341,7 +341,7 @@ min_count - minimum multiplicity for filtering (k_min+1)-mers, default 2
         k_list - list of kmer size (all must be odd, in the range 15-127, increment <= 28);
  override `--k-min', `--k-max' and `--k-step'
 
-min_contig_length - minimum length of contigs to output, default is 500
+min_contig_length - minimum length of contigs to output, default is 2000
 
 @optional megahit_parameter_preset
 @optional min_count
@@ -349,7 +349,7 @@ min_contig_length - minimum length of contigs to output, default is 500
 @optional k_max
 @optional k_step
 @optional k_list
-@optional min_contig_len
+@optional min_contig_length
 
 
 =item Definition
@@ -367,7 +367,7 @@ k_min has a value which is an int
 k_max has a value which is an int
 k_step has a value which is an int
 k_list has a value which is a reference to a list where each element is an int
-min_contig_len has a value which is an int
+min_contig_length has a value which is an int
 
 </pre>
 
@@ -385,7 +385,7 @@ k_min has a value which is an int
 k_max has a value which is an int
 k_step has a value which is an int
 k_list has a value which is a reference to a list where each element is an int
-min_contig_len has a value which is an int
+min_contig_length has a value which is an int
 
 
 =end text

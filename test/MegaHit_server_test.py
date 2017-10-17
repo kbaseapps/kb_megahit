@@ -157,7 +157,7 @@ class MegaHitTest(unittest.TestCase):
 
 
 
-    def test_run_megahit_with_min_contig_len(self):
+    def test_run_megahit_with_min_contig_length(self):
 
         # figure out where the test data lives
         pe_lib_info = self.getPairedEndLibInfo()
@@ -167,7 +167,7 @@ class MegaHitTest(unittest.TestCase):
             'workspace_name': pe_lib_info[7],
             'read_library_ref': pe_lib_info[7] + '/' + pe_lib_info[1],
             'output_contigset_name': 'trimmed.output.contigset',
-            'min_contig_len': 63000
+            'min_contig_length': 63000
         }
 
         result = self.getImpl().run_megahit(self.getContext(), params)

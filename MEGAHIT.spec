@@ -33,7 +33,7 @@ module MEGAHIT {
         k_list - list of kmer size (all must be odd, in the range 15-127, increment <= 28);
                  override `--k-min', `--k-max' and `--k-step'
 
-		min_contig_length - minimum length of contigs to output, default is 500
+		min_contig_length - minimum length of contigs to output, default is 2000
 
 		@optional megahit_parameter_preset
 		@optional min_count
@@ -41,7 +41,7 @@ module MEGAHIT {
 		@optional k_max
 		@optional k_step
 		@optional k_list
-		@optional min_contig_len
+		@optional min_contig_length
 	*/
 	typedef structure {
 		string workspace_name;
@@ -55,7 +55,7 @@ module MEGAHIT {
 		int k_max;
 		int k_step;
 		list <int> k_list;
-		int min_contig_len;
+		int min_contig_length;
 	} MegaHitParams;
 
 

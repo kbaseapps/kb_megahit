@@ -54,7 +54,7 @@ parameters :
     k_list:
         ui-name : '--k-list'
         short-hint : 'list of kmer size (all must be odd, in the range 15-255, increment <= 28)'
-    min_contig_len:
+    min_contig_length:
         ui-name : '--min-contig-len'
         short-hint : 'minimum length of contigs to output'
 
