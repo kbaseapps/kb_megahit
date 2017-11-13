@@ -1,10 +1,10 @@
 {
-	"ver": "2.2.7",
+	"ver": "2.2.8",
 	
 	"authors": [
 		"msneddon", "dylan"
 	],
-	"contact": "help@kbase.us",
+	"contact": "http://kbase.us/contact-us/",
 	"visible": true,
 	"categories": ["active","assembly","communities"],
 	"widgets": {
