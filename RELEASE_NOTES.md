@@ -1,3 +1,7 @@
+### Version 2.2.10
+__Changes__
+- updated base image to sdkbase2
+
 ### Version 2.2.9
 __Changes__
 - changed citation to PLOS format 
