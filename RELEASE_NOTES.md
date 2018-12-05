@@ -1,6 +1,7 @@
 ### Version 2.2.10
 __Changes__
 - updated base image to sdkbase2
+- update default output value from MEGAHIT.contigs to MEGAHIT.assembly
 
 ### Version 2.2.9
 __Changes__
