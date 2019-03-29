@@ -1,3 +1,7 @@
+### Version 2.3.0
+__Changes__
+- Update to Python 3
+
 ### Version 2.2.10
 __Changes__
 - updated base image to sdkbase2
