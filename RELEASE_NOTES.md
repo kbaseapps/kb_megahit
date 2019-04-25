@@ -1,3 +1,12 @@
+### Version 2.3.0
+__Changes__
+- Update to Python 3
+
+### Version 2.2.10
+__Changes__
+- updated base image to sdkbase2
+- update default output value from MEGAHIT.contigs to MEGAHIT.assembly
+
 ### Version 2.2.9
 __Changes__
 - changed citation to PLOS format 

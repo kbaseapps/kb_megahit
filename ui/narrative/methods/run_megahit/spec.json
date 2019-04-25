@@ -1,5 +1,5 @@
 {
-	"ver": "2.2.8",
+	"ver": "2.2.10",
 	
 	"authors": [
 		"msneddon", "dylan"
@@ -28,7 +28,7 @@
 		    "optional" : false,
 		    "advanced" : false,
 		    "allow_multiple" : false,
-		    "default_values" : [ "MEGAHIT.contigs" ],
+		    "default_values" : [ "MEGAHIT.assembly" ],
 		    "field_type" : "text",
 		    "text_options" : {
 		     	"valid_ws_types" : [ "KBaseGenomeAnnotations.Assembly" ],

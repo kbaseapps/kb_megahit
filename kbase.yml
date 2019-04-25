@@ -11,7 +11,7 @@ service-language:
     python
 
 module-version:
-    2.2.9
+    2.3.0
 
 owners:
     [msneddon, rsutormin, dylan, mclark58]
