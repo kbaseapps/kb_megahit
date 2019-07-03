@@ -16,6 +16,7 @@ from KBaseReport.KBaseReportClient import KBaseReport
 from KBaseReport.baseclient import ServerError as _RepError
 from kb_quast.kb_quastClient import kb_quast
 from kb_quast.baseclient import ServerError as QUASTError
+import multiprocessing
 #END_HEADER
 
 
@@ -183,6 +184,10 @@ class MEGAHIT:
 
         megahit_cmd.append('--min-contig-len')
         megahit_cmd.append(str(min_contig_length))
+
+        # set the number of cpus
+        megahit_cmd.append('--num-cpu-threads')
+        megahit_cmd.append(str(multiprocessing.cpu_count() - 1))
 
         # set the output location
         timestamp = int((datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds() * 1000)
