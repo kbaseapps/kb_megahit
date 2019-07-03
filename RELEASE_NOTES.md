@@ -1,3 +1,8 @@
+### Version 2.3.1
+__Changes__
+- Request MAX CPUS - 1
+
+
 ### Version 2.3.0
 __Changes__
 - Update to Python 3
