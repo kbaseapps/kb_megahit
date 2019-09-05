@@ -1,3 +1,9 @@
+### Version 2.4.0
+- Upgrade Megahit to 1.2.8
+- Move installed clients into lib/installed_clients
+- Update base image to kbase/sdkbase2
+- Request num_cores-1 as the thread count
+
 ### Version 2.3.0
 __Changes__
 - Update to Python 3

@@ -12,10 +12,9 @@ from __future__ import print_function
 try:
     # baseclient and this client are in a package
     from .baseclient import BaseClient as _BaseClient  # @UnusedImport
-except:
+except ImportError:
     # no they aren't
     from baseclient import BaseClient as _BaseClient  # @Reimport
-import time
 
 
 class kb_quast(object):
@@ -24,7 +23,7 @@ class kb_quast(object):
             self, url=None, timeout=30 * 60, user_id=None,
             password=None, token=None, ignore_authrc=False,
             trust_all_ssl_certificates=False,
-            auth_svc='https://kbase.us/services/authorization/Sessions/Login',
+            auth_svc='https://ci.kbase.us/services/auth/api/legacy/KBase/Sessions/Login',
             service_ver='release',
             async_job_check_time_ms=100, async_job_check_time_scale_percent=150, 
             async_job_check_max_time_ms=300000):
@@ -40,47 +39,28 @@ class kb_quast(object):
             async_job_check_time_scale_percent=async_job_check_time_scale_percent,
             async_job_check_max_time_ms=async_job_check_max_time_ms)
 
-    def _check_job(self, job_id):
-        return self._client._check_job('kb_quast', job_id)
-
-    def _run_QUAST_app_submit(self, params, context=None):
-        return self._client._submit_job(
-             'kb_quast.run_QUAST_app', [params],
-             self._service_ver, context)
-
     def run_QUAST_app(self, params, context=None):
         """
         Run QUAST and save a KBaseReport with the output.
         :param params: instance of type "QUASTAppParams" (Input for running
            QUAST as a Narrative application. workspace_name - the name of the
            workspace where the KBaseReport object will be saved. assemblies -
-           the list of assemblies upon which QUAST will be run.) ->
-           structure: parameter "workspace_name" of String, parameter
+           the list of assemblies upon which QUAST will be run. force_glimmer
+           - running '--glimmer' option regardless of assembly object size)
+           -> structure: parameter "workspace_name" of String, parameter
            "assemblies" of list of type "assembly_ref" (An X/Y/Z style
            reference to a workspace object containing an assembly, either a
-           KBaseGenomes.ContigSet or KBaseGenomeAnnotations.Assembly.)
+           KBaseGenomes.ContigSet or KBaseGenomeAnnotations.Assembly.),
+           parameter "force_glimmer" of type "boolean" (A boolean - 0 for
+           false, 1 for true. @range (0, 1))
         :returns: instance of type "QUASTAppOutput" (Output of the
            run_quast_app function. report_name - the name of the
            KBaseReport.Report workspace object. report_ref - the workspace
            reference of the report.) -> structure: parameter "report_name" of
            String, parameter "report_ref" of String
         """
-        job_id = self._run_QUAST_app_submit(params, context)
-        async_job_check_time = self._client.async_job_check_time
-        while True:
-            time.sleep(async_job_check_time)
-            async_job_check_time = (async_job_check_time *
-                self._client.async_job_check_time_scale_percent / 100.0)
-            if async_job_check_time > self._client.async_job_check_max_time:
-                async_job_check_time = self._client.async_job_check_max_time
-            job_state = self._check_job(job_id)
-            if job_state['finished']:
-                return job_state['result'][0]
-
-    def _run_QUAST_submit(self, params, context=None):
-        return self._client._submit_job(
-             'kb_quast.run_QUAST', [params],
-             self._service_ver, context)
+        return self._client.run_job('kb_quast.run_QUAST_app',
+                                    [params], self._service_ver, context)
 
     def run_QUAST(self, params, context=None):
         """
@@ -89,16 +69,19 @@ class kb_quast(object):
            QUAST. assemblies - the list of assemblies upon which QUAST will
            be run. -OR- files - the list of FASTA files upon which QUAST will
            be run. Optional arguments: make_handle - create a handle for the
-           new shock node for the report.) -> structure: parameter
-           "assemblies" of list of type "assembly_ref" (An X/Y/Z style
-           reference to a workspace object containing an assembly, either a
-           KBaseGenomes.ContigSet or KBaseGenomeAnnotations.Assembly.),
-           parameter "files" of list of type "FASTAFile" (A local FASTA file.
-           path - the path to the FASTA file. label - the label to use for
-           the file in the QUAST output. If missing, the file name will be
-           used.) -> structure: parameter "path" of String, parameter "label"
-           of String, parameter "make_handle" of type "boolean" (A boolean -
-           0 for false, 1 for true. @range (0, 1))
+           new shock node for the report. force_glimmer - running '--glimmer'
+           option regardless of file/assembly object size) -> structure:
+           parameter "assemblies" of list of type "assembly_ref" (An X/Y/Z
+           style reference to a workspace object containing an assembly,
+           either a KBaseGenomes.ContigSet or
+           KBaseGenomeAnnotations.Assembly.), parameter "files" of list of
+           type "FASTAFile" (A local FASTA file. path - the path to the FASTA
+           file. label - the label to use for the file in the QUAST output.
+           If missing, the file name will be used.) -> structure: parameter
+           "path" of String, parameter "label" of String, parameter
+           "make_handle" of type "boolean" (A boolean - 0 for false, 1 for
+           true. @range (0, 1)), parameter "force_glimmer" of type "boolean"
+           (A boolean - 0 for false, 1 for true. @range (0, 1))
         :returns: instance of type "QUASTOutput" (Ouput of the run_quast
            function. shock_id - the id of the shock node where the zipped
            QUAST output is stored. handle - the new handle for the shock
@@ -118,28 +101,9 @@ class kb_quast(object):
            String, parameter "size" of String, parameter "quast_path" of
            String
         """
-        job_id = self._run_QUAST_submit(params, context)
-        async_job_check_time = self._client.async_job_check_time
-        while True:
-            time.sleep(async_job_check_time)
-            async_job_check_time = (async_job_check_time *
-                self._client.async_job_check_time_scale_percent / 100.0)
-            if async_job_check_time > self._client.async_job_check_max_time:
-                async_job_check_time = self._client.async_job_check_max_time
-            job_state = self._check_job(job_id)
-            if job_state['finished']:
-                return job_state['result'][0]
+        return self._client.run_job('kb_quast.run_QUAST',
+                                    [params], self._service_ver, context)
 
     def status(self, context=None):
-        job_id = self._client._submit_job('kb_quast.status', 
-            [], self._service_ver, context)
-        async_job_check_time = self._client.async_job_check_time
-        while True:
-            time.sleep(async_job_check_time)
-            async_job_check_time = (async_job_check_time *
-                self._client.async_job_check_time_scale_percent / 100.0)
-            if async_job_check_time > self._client.async_job_check_max_time:
-                async_job_check_time = self._client.async_job_check_max_time
-            job_state = self._check_job(job_id)
-            if job_state['finished']:
-                return job_state['result'][0]
+        return self._client.run_job('kb_quast.status',
+                                    [], self._service_ver, context)

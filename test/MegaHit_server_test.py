@@ -1,19 +1,15 @@
 import unittest
 import os
-import json
 import time
-import requests
 import shutil
 
 from os import environ
-from ConfigParser import ConfigParser
-from requests_toolbelt import MultipartEncoder
+from configparser import ConfigParser
 from pprint import pprint
 
-from Workspace.WorkspaceClient import Workspace as workspaceService
-from biokbase.AbstractHandle.Client import AbstractHandle as HandleService
+from installed_clients.WorkspaceClient import Workspace as workspaceService
 from MEGAHIT.MEGAHITImpl import MEGAHIT
-from ReadsUtils.ReadsUtilsClient import ReadsUtils
+from installed_clients.ReadsUtilsClient import ReadsUtils
 
 
 class MegaHitTest(unittest.TestCase):
@@ -36,8 +32,6 @@ class MegaHitTest(unittest.TestCase):
 
         cls.shockURL = cls.cfg['shock-url']
         cls.handleURL = cls.cfg['handle-service-url']
-
-
 
     @classmethod
     def tearDownClass(cls):
@@ -81,16 +75,11 @@ class MegaHitTest(unittest.TestCase):
         self.__class__.pairedEndLibInfo = new_obj_info[0]
         return new_obj_info[0]
 
-
-
-
-
     def getImpl(self):
         return self.__class__.serviceImpl
 
     def getContext(self):
         return self.__class__.ctx
-
 
     def test_run_megahit(self):
 
@@ -110,7 +99,6 @@ class MegaHitTest(unittest.TestCase):
         # 8 - string chsum
         # 9 - int size
         # 10 - usermeta meta
-
 
         # run megahit
         params = {
@@ -154,11 +142,7 @@ class MegaHitTest(unittest.TestCase):
         self.assertEqual(ht['label'], 'QUAST report')
         self.assertEqual(ht['name'], 'report.html')
 
-
-
-
     def test_run_megahit_with_min_contig_length(self):
-
         # figure out where the test data lives
         pe_lib_info = self.getPairedEndLibInfo()
 
@@ -181,5 +165,3 @@ class MegaHitTest(unittest.TestCase):
         self.assertEqual(contigset_info[1], 'trimmed.output.contigset')
         self.assertEqual(contigset_info[2].split('-')[0], 'KBaseGenomeAnnotations.Assembly')
         self.assertEqual(contigset_info[10]['Size'], '64794')
-
-

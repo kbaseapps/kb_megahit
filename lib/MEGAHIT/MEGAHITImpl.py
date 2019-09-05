@@ -6,16 +6,16 @@ import subprocess
 from datetime import datetime
 from pprint import pprint
 import uuid
+import multiprocessing
 
 import numpy as np
 from Bio import SeqIO
 
-from ReadsUtils.ReadsUtilsClient import ReadsUtils
-from AssemblyUtil.AssemblyUtilClient import AssemblyUtil
-from KBaseReport.KBaseReportClient import KBaseReport
-from KBaseReport.baseclient import ServerError as _RepError
-from kb_quast.kb_quastClient import kb_quast
-from kb_quast.baseclient import ServerError as QUASTError
+from installed_clients.ReadsUtilsClient import ReadsUtils
+from installed_clients.AssemblyUtilClient import AssemblyUtil
+from installed_clients.KBaseReportClient import KBaseReport
+from installed_clients.baseclient import ServerError
+from installed_clients.kb_quastClient import kb_quast
 #END_HEADER
 
 
@@ -34,12 +34,12 @@ class MEGAHIT:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "2.2.10"
+    VERSION = "2.3.0"
     GIT_URL = "https://github.com/kbaseapps/kb_megahit"
-    GIT_COMMIT_HASH = "0e8e31ce50ed58dfebd385b099571bb55b26c0e7"
+    GIT_COMMIT_HASH = "d54ffedb8a3e11317d8f413b5c210d3dc796b86e"
 
     #BEGIN_CLASS_HEADER
-    MEGAHIT = '/kb/module/megahit/megahit'
+    MEGAHIT = '/usr/bin/megahit'
     #END_CLASS_HEADER
 
     # config contains contents of config file in a hash or None if it couldn't
@@ -76,7 +76,7 @@ class MEGAHIT:
            output_contig_set_name - the name of the output contigset
            megahit_parameter_preset - override a group of parameters;
            possible values: meta            '--min-count 2 --k-list
-           21,41,61,81,99' (generic metagenomes, default) meta-sensitive 
+           21,41,61,81,99' (generic metagenomes, default) meta-sensitive
            '--min-count 2 --k-list 21,31,41,51,61,71,81,91,99' (more
            sensitive but slower) meta-large      '--min-count 2 --k-list
            27,37,47,57,67,77,87' (large & complex metagenomes, like soil)
@@ -184,6 +184,10 @@ class MEGAHIT:
         megahit_cmd.append('--min-contig-len')
         megahit_cmd.append(str(min_contig_length))
 
+        # Set the number of CPUs to the number of cores minus 1
+        megahit_cmd.append('--num-cpu-threads')
+        megahit_cmd.append(str(multiprocessing.cpu_count() - 1))
+
         # set the output location
         timestamp = int((datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds() * 1000)
         output_dir = os.path.join(self.scratch, 'output.' + str(timestamp))
@@ -240,9 +244,9 @@ class MEGAHIT:
         try:
             quastret = kbq.run_QUAST({'files': [{'path': output_contigs,
                                                  'label': params['output_contigset_name']}]})
-        except QUASTError as qe:
+        except ServerError as qe:
             # not really any way to test this, all inputs have been checked earlier and should be
-            # ok 
+            # ok
             print('Logging exception from running QUAST')
             print(str(qe))
             # TODO delete shock node
@@ -262,9 +266,9 @@ class MEGAHIT:
                  'report_object_name': 'kb_megahit_report_' + str(uuid.uuid4()),
                  'workspace_name': params['workspace_name']
                  })
-        except _RepError as re:
+        except ServerError as re:
             # not really any way to test this, all inputs have been checked earlier and should be
-            # ok 
+            # ok
             print('Logging exception from creating report object')
             print(str(re))
             # TODO delete shock node
