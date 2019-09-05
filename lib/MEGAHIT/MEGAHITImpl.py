@@ -34,9 +34,9 @@ class MEGAHIT:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "2.3.0"
+    VERSION = "2.4.0"
     GIT_URL = "https://github.com/kbaseapps/kb_megahit"
-    GIT_COMMIT_HASH = "d54ffedb8a3e11317d8f413b5c210d3dc796b86e"
+    GIT_COMMIT_HASH = "1f033cc88194b94ac69a39df956cf96a343cc1c7"
 
     #BEGIN_CLASS_HEADER
     MEGAHIT = '/usr/bin/megahit'
