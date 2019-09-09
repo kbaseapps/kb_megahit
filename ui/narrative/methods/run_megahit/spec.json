@@ -1,8 +1,8 @@
 {
-	"ver": "2.2.10",
+	"ver": "2.4.0",
 	
 	"authors": [
-		"msneddon", "dylan"
+		"jayrbolton", "bsadkhin", "dylan"
 	],
 	"contact": "http://kbase.us/contact-us/",
 	"visible": true,
