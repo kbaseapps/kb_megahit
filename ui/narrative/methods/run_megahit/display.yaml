@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Assemble Reads with MEGAHIT v1.1.1
+name: Assemble Reads with MEGAHIT v1.2.8
 tooltip: Assemble metagenomic reads using the MEGAHIT assembler.
 screenshots: []
 
