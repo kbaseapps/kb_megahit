@@ -1,7 +1,13 @@
+### Version 2.4.0
+__Changes__
+- Upgrade Megahit to 1.2.8
+- Move installed clients into lib/installed_clients
+- Update base image to kbase/sdkbase2
+- Upgrade to py3
+
 ### Version 2.3.1
 __Changes__
-- Request MAX CPUS - 1
-
+- Request MAX CPUS - 1 for the --thread-count option in megahit
 
 ### Version 2.3.0
 __Changes__
@@ -14,7 +20,7 @@ __Changes__
 
 ### Version 2.2.9
 __Changes__
-- changed citation to PLOS format 
+- changed citation to PLOS format
 
 ### Version 2.2.8
 __Changes__

@@ -2,8 +2,8 @@ import sys
 import os
 import os.path
 from jinja2 import Template
-from ConfigParser import ConfigParser
-import StringIO
+from configparser import ConfigParser
+from io import StringIO
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
@@ -24,7 +24,7 @@ if __name__ == "__main__":
                 "workspace_url = " + kbase_endpoint + "/ws\n" + \
                 "shock_url = " + kbase_endpoint + "/shock-api\n" + \
                 "kbase_endpoint = " + kbase_endpoint + "\n"
-        config.readfp(StringIO.StringIO(props))
+        config.readfp(StringIO(props))
     else:
         raise ValueError('Neither ' + sys.argv[2] + ' file nor KBASE_ENDPOINT env-variable found')
     props = dict(config.items("global"))
