@@ -182,4 +182,24 @@ class MegaHitTest(unittest.TestCase):
         self.assertEqual(contigset_info[2].split('-')[0], 'KBaseGenomeAnnotations.Assembly')
         self.assertEqual(contigset_info[10]['Size'], '64794')
 
+    def test_run_megahit_oom_error(self):
+        # force MEGAHIT to use waaaay less than enough memory to trigger the error
 
+        pe_lib_info = self.getPairedEndLibInfo()
+        # run megahit
+        params = {
+            'workspace_name': pe_lib_info[7],
+            'read_library_ref': pe_lib_info[7] + '/' + pe_lib_info[1],
+            'megahit_parameter_preset': 'meta-sensitive',
+            'output_contigset_name': 'output.contigset',
+            'max_mem_percent': 0.001
+        }
+
+        with self.assertRaises(RuntimeError) as e:
+            self.getImpl().run_megahit(self.getContext(), params)
+
+        err_str = str(e.exception)
+        print("Successfully triggered OOM error!\n" + err_str)
+        self.assertIn("Error running MEGAHIT, return code", err_str)
+        self.assertIn("Additional Information", err_str)
+        self.assertIn("please set -m parameter to at least", err_str)

@@ -132,6 +132,7 @@ MegaHitParams is a reference to a hash where the following keys are defined:
 	k_step has a value which is an int
 	k_list has a value which is a reference to a list where each element is an int
 	min_contig_length has a value which is an int
+	max_mem_percent has a value which is a float
 MegaHitOutput is a reference to a hash where the following keys are defined:
 	report_name has a value which is a string
 	report_ref has a value which is a string
@@ -155,6 +156,7 @@ MegaHitParams is a reference to a hash where the following keys are defined:
 	k_step has a value which is an int
 	k_list has a value which is a reference to a list where each element is an int
 	min_contig_length has a value which is an int
+	max_mem_percent has a value which is a float
 MegaHitOutput is a reference to a hash where the following keys are defined:
 	report_name has a value which is a string
 	report_ref has a value which is a string
@@ -319,7 +321,7 @@ workspace_name - the name of the workspace for input/output
 read_library_ref - the name of the PE read library (SE library support in the future)
 output_contig_set_name - the name of the output contigset
 
-megahit_parameter_preset - 
+megahit_parameter_preset -
         override a group of parameters; possible values:
             meta            '--min-count 2 --k-list 21,41,61,81,99'
             (generic metagenomes, default)
@@ -343,6 +345,9 @@ min_count - minimum multiplicity for filtering (k_min+1)-mers, default 2
 
 min_contig_length - minimum length of contigs to output, default is 2000
 
+max_mem_percnet - maximum memory to make available to MEGAHIT, as a percentage of
+                                  available system memory (optional, default = 0.9 or 90%)
+
 @optional megahit_parameter_preset
 @optional min_count
 @optional k_min
@@ -350,6 +355,7 @@ min_contig_length - minimum length of contigs to output, default is 2000
 @optional k_step
 @optional k_list
 @optional min_contig_length
+@optional max_mem_percent
 
 
 =item Definition
@@ -368,6 +374,7 @@ k_max has a value which is an int
 k_step has a value which is an int
 k_list has a value which is a reference to a list where each element is an int
 min_contig_length has a value which is an int
+max_mem_percent has a value which is a float
 
 </pre>
 
@@ -386,6 +393,7 @@ k_max has a value which is an int
 k_step has a value which is an int
 k_list has a value which is a reference to a list where each element is an int
 min_contig_length has a value which is an int
+max_mem_percent has a value which is a float
 
 
 =end text

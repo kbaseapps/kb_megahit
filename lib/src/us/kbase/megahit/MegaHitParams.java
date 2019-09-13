@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * workspace_name - the name of the workspace for input/output
  * read_library_ref - the name of the PE read library (SE library support in the future)
  * output_contig_set_name - the name of the output contigset
- * megahit_parameter_preset - 
+ * megahit_parameter_preset -
  *         override a group of parameters; possible values:
  *             meta            '--min-count 2 --k-list 21,41,61,81,99'
  *             (generic metagenomes, default)
@@ -38,6 +38,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  *         k_list - list of kmer size (all must be odd, in the range 15-127, increment <= 28);
  *  override `--k-min', `--k-max' and `--k-step'
  * min_contig_length - minimum length of contigs to output, default is 2000
+ * max_mem_percnet - maximum memory to make available to MEGAHIT, as a percentage of
+ *                                   available system memory (optional, default = 0.9 or 90%)
  * @optional megahit_parameter_preset
  * @optional min_count
  * @optional k_min
@@ -45,6 +47,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * @optional k_step
  * @optional k_list
  * @optional min_contig_length
+ * @optional max_mem_percent
  * </pre>
  * 
  */
@@ -60,7 +63,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "k_max",
     "k_step",
     "k_list",
-    "min_contig_length"
+    "min_contig_length",
+    "max_mem_percent"
 })
 public class MegaHitParams {
 
@@ -84,6 +88,8 @@ public class MegaHitParams {
     private List<Long> kList;
     @JsonProperty("min_contig_length")
     private java.lang.Long minContigLength;
+    @JsonProperty("max_mem_percent")
+    private Double maxMemPercent;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("workspace_name")
@@ -236,6 +242,21 @@ public class MegaHitParams {
         return this;
     }
 
+    @JsonProperty("max_mem_percent")
+    public Double getMaxMemPercent() {
+        return maxMemPercent;
+    }
+
+    @JsonProperty("max_mem_percent")
+    public void setMaxMemPercent(Double maxMemPercent) {
+        this.maxMemPercent = maxMemPercent;
+    }
+
+    public MegaHitParams withMaxMemPercent(Double maxMemPercent) {
+        this.maxMemPercent = maxMemPercent;
+        return this;
+    }
+
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -248,7 +269,7 @@ public class MegaHitParams {
 
     @Override
     public String toString() {
-        return ((((((((((((((((((((((("MegaHitParams"+" [workspaceName=")+ workspaceName)+", readLibraryRef=")+ readLibraryRef)+", outputContigsetName=")+ outputContigsetName)+", megahitParameterPreset=")+ megahitParameterPreset)+", minCount=")+ minCount)+", kMin=")+ kMin)+", kMax=")+ kMax)+", kStep=")+ kStep)+", kList=")+ kList)+", minContigLength=")+ minContigLength)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((((((((((((("MegaHitParams"+" [workspaceName=")+ workspaceName)+", readLibraryRef=")+ readLibraryRef)+", outputContigsetName=")+ outputContigsetName)+", megahitParameterPreset=")+ megahitParameterPreset)+", minCount=")+ minCount)+", kMin=")+ kMin)+", kMax=")+ kMax)+", kStep=")+ kStep)+", kList=")+ kList)+", minContigLength=")+ minContigLength)+", maxMemPercent=")+ maxMemPercent)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }
