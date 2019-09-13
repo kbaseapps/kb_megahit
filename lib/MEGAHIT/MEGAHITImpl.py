@@ -201,9 +201,6 @@ class MEGAHIT:
         megahit_cmd.append('-m')
         megahit_cmd.append(str(max_mem_percent))
 
-        megahit_cmd.append('--mem-flag')
-        megahit_cmd.append('0')
-
         # set the output location
         timestamp = int((datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds() * 1000)
         output_dir = os.path.join(self.scratch, 'output.' + str(timestamp))
