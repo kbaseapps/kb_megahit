@@ -16,6 +16,9 @@ from installed_clients.AssemblyUtilClient import AssemblyUtil
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.baseclient import ServerError
 from installed_clients.kb_quastClient import kb_quast
+
+from .error import report_megahit_error
+
 #END_HEADER
 
 
@@ -35,8 +38,8 @@ class MEGAHIT:
     # the latter method is running.
     ######################################### noqa
     VERSION = "2.4.0"
-    GIT_URL = "https://github.com/kbaseapps/kb_megahit"
-    GIT_COMMIT_HASH = "1f033cc88194b94ac69a39df956cf96a343cc1c7"
+    GIT_URL = "https://github.com/briehl/kb_megahit"
+    GIT_COMMIT_HASH = "c0264e2b3f9080055ac32f7d7fa58f9a2dbae574"
 
     #BEGIN_CLASS_HEADER
     MEGAHIT = '/usr/bin/megahit'
@@ -91,16 +94,19 @@ class MEGAHIT:
            even number, default 10 k_list - list of kmer size (all must be
            odd, in the range 15-127, increment <= 28); override `--k-min',
            `--k-max' and `--k-step' min_contig_length - minimum length of
-           contigs to output, default is 2000 @optional
+           contigs to output, default is 2000 max_mem_percent - maximum
+           memory to make available to MEGAHIT, as a percentage of available
+           system memory (optional, default = 0.9 or 90%) @optional
            megahit_parameter_preset @optional min_count @optional k_min
            @optional k_max @optional k_step @optional k_list @optional
-           min_contig_length) -> structure: parameter "workspace_name" of
-           String, parameter "read_library_ref" of String, parameter
-           "output_contigset_name" of String, parameter
+           min_contig_length @optional max_mem_percent) -> structure:
+           parameter "workspace_name" of String, parameter "read_library_ref"
+           of String, parameter "output_contigset_name" of String, parameter
            "megahit_parameter_preset" of String, parameter "min_count" of
            Long, parameter "k_min" of Long, parameter "k_max" of Long,
            parameter "k_step" of Long, parameter "k_list" of list of Long,
-           parameter "min_contig_length" of Long
+           parameter "min_contig_length" of Long, parameter "max_mem_percent"
+           of Double
         :returns: instance of type "MegaHitOutput" -> structure: parameter
            "report_name" of String, parameter "report_ref" of String
         """
@@ -186,7 +192,14 @@ class MEGAHIT:
 
         # Set the number of CPUs to the number of cores minus 1
         megahit_cmd.append('--num-cpu-threads')
-        megahit_cmd.append(str(multiprocessing.cpu_count() - 1))
+        megahit_cmd.append(str(max([(multiprocessing.cpu_count() - 1), 1])))
+
+        # set mem usage
+        # Note: this just sets the default value - 90% of available system memory allocated
+        # to the container. Exposing it here as a place to later expose as a parameter.
+        max_mem_percent = params.get('max_mem_percent', 0.9)
+        megahit_cmd.append('-m')
+        megahit_cmd.append(str(max_mem_percent))
 
         # set the output location
         timestamp = int((datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds() * 1000)
@@ -202,8 +215,8 @@ class MEGAHIT:
 
         print('Return code: ' + str(retcode))
         if p.returncode != 0:
-            raise ValueError('Error running MEGAHIT, return code: ' +
-                             str(retcode) + '\n')
+            error_str = report_megahit_error(output_dir, retcode)
+            raise RuntimeError(error_str)
 
         output_contigs = os.path.join(output_dir, 'final.contigs.fa')
 
