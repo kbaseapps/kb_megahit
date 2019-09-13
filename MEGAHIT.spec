@@ -11,7 +11,7 @@ module MEGAHIT {
 		read_library_ref - the name of the PE read library (SE library support in the future)
 		output_contig_set_name - the name of the output contigset
 
-		megahit_parameter_preset - 
+		megahit_parameter_preset -
 			override a group of parameters; possible values:
             meta            '--min-count 2 --k-list 21,41,61,81,99'
                             (generic metagenomes, default)
@@ -35,6 +35,9 @@ module MEGAHIT {
 
 		min_contig_length - minimum length of contigs to output, default is 2000
 
+		max_mem_percent - maximum memory to make available to MEGAHIT, as a percentage of
+											available system memory (optional, default = 0.9 or 90%)
+
 		@optional megahit_parameter_preset
 		@optional min_count
 		@optional k_min
@@ -42,6 +45,7 @@ module MEGAHIT {
 		@optional k_step
 		@optional k_list
 		@optional min_contig_length
+		@optional max_mem_percent
 	*/
 	typedef structure {
 		string workspace_name;
@@ -56,6 +60,7 @@ module MEGAHIT {
 		int k_step;
 		list <int> k_list;
 		int min_contig_length;
+		float max_mem_percent;
 	} MegaHitParams;
 
 
