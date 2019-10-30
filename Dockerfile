@@ -7,9 +7,9 @@ RUN pip install --upgrade pip
 
 # Install MEGAHIT
 WORKDIR /kb/module
-ARG filename=MEGAHIT-1.2.8-Linux-x86_64-static
+ARG filename=MEGAHIT-1.2.9-Linux-x86_64-static
 RUN cd /opt && \
-  curl -L -O https://github.com/voutcn/megahit/releases/download/v1.2.8/${filename}.tar.gz && \
+  curl -L -O https://github.com/voutcn/megahit/releases/download/v1.2.9/${filename}.tar.gz && \
   tar -xvf ${filename}.tar.gz && \
   rm ${filename}.tar.gz && \
   ln -s /opt/${filename}/bin/megahit /usr/bin/megahit && \

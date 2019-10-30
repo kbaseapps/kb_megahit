@@ -1,3 +1,7 @@
+### Version 2.4.1
+__Changes__
+- Upgrade Megahit to 1.2.9
+
 ### Version 2.4.0
 __Changes__
 - Upgrade Megahit to 1.2.8
