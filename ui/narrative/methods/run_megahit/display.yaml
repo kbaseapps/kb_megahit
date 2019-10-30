@@ -80,15 +80,14 @@ description : |
       <li> Dylan Chivian </li>
     </ul>
     </p>
-
-  <p>
-    KBase module authors:
-    <ul>
-      <li> Michael Sneddon </li>
-      <li> Roman Sutormin </li>
-      <li> Dylan Chivian </li>
-    </ul>
-  </p>
+    <p>
+      KBase module authors:
+      <ul>
+        <li> Michael Sneddon </li>
+        <li> Roman Sutormin </li>
+        <li> Dylan Chivian </li>
+      </ul>
+    </p>
 
 publications :
     -
