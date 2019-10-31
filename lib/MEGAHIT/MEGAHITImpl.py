@@ -6,17 +6,19 @@ import subprocess
 from datetime import datetime
 from pprint import pprint
 import uuid
+import multiprocessing
 
 import numpy as np
 from Bio import SeqIO
 
-from ReadsUtils.ReadsUtilsClient import ReadsUtils
-from AssemblyUtil.AssemblyUtilClient import AssemblyUtil
-from KBaseReport.KBaseReportClient import KBaseReport
-from KBaseReport.baseclient import ServerError as _RepError
-from kb_quast.kb_quastClient import kb_quast
-from kb_quast.baseclient import ServerError as QUASTError
-import multiprocessing
+from installed_clients.ReadsUtilsClient import ReadsUtils
+from installed_clients.AssemblyUtilClient import AssemblyUtil
+from installed_clients.KBaseReportClient import KBaseReport
+from installed_clients.baseclient import ServerError
+from installed_clients.kb_quastClient import kb_quast
+
+from .error import report_megahit_error
+
 #END_HEADER
 
 
@@ -35,12 +37,12 @@ class MEGAHIT:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "2.2.10"
-    GIT_URL = "https://github.com/kbaseapps/kb_megahit"
-    GIT_COMMIT_HASH = "0e8e31ce50ed58dfebd385b099571bb55b26c0e7"
+    VERSION = "2.4.0"
+    GIT_URL = "https://github.com/briehl/kb_megahit"
+    GIT_COMMIT_HASH = "c0264e2b3f9080055ac32f7d7fa58f9a2dbae574"
 
     #BEGIN_CLASS_HEADER
-    MEGAHIT = '/kb/module/megahit/megahit'
+    MEGAHIT = '/usr/bin/megahit'
     #END_CLASS_HEADER
 
     # config contains contents of config file in a hash or None if it couldn't
@@ -77,7 +79,7 @@ class MEGAHIT:
            output_contig_set_name - the name of the output contigset
            megahit_parameter_preset - override a group of parameters;
            possible values: meta            '--min-count 2 --k-list
-           21,41,61,81,99' (generic metagenomes, default) meta-sensitive 
+           21,41,61,81,99' (generic metagenomes, default) meta-sensitive
            '--min-count 2 --k-list 21,31,41,51,61,71,81,91,99' (more
            sensitive but slower) meta-large      '--min-count 2 --k-list
            27,37,47,57,67,77,87' (large & complex metagenomes, like soil)
@@ -92,16 +94,19 @@ class MEGAHIT:
            even number, default 10 k_list - list of kmer size (all must be
            odd, in the range 15-127, increment <= 28); override `--k-min',
            `--k-max' and `--k-step' min_contig_length - minimum length of
-           contigs to output, default is 2000 @optional
+           contigs to output, default is 2000 max_mem_percent - maximum
+           memory to make available to MEGAHIT, as a percentage of available
+           system memory (optional, default = 0.9 or 90%) @optional
            megahit_parameter_preset @optional min_count @optional k_min
            @optional k_max @optional k_step @optional k_list @optional
-           min_contig_length) -> structure: parameter "workspace_name" of
-           String, parameter "read_library_ref" of String, parameter
-           "output_contigset_name" of String, parameter
+           min_contig_length @optional max_mem_percent) -> structure:
+           parameter "workspace_name" of String, parameter "read_library_ref"
+           of String, parameter "output_contigset_name" of String, parameter
            "megahit_parameter_preset" of String, parameter "min_count" of
            Long, parameter "k_min" of Long, parameter "k_max" of Long,
            parameter "k_step" of Long, parameter "k_list" of list of Long,
-           parameter "min_contig_length" of Long
+           parameter "min_contig_length" of Long, parameter "max_mem_percent"
+           of Double
         :returns: instance of type "MegaHitOutput" -> structure: parameter
            "report_name" of String, parameter "report_ref" of String
         """
@@ -185,9 +190,16 @@ class MEGAHIT:
         megahit_cmd.append('--min-contig-len')
         megahit_cmd.append(str(min_contig_length))
 
-        # set the number of cpus
+        # Set the number of CPUs to the number of cores minus 1
         megahit_cmd.append('--num-cpu-threads')
-        megahit_cmd.append(str(multiprocessing.cpu_count() - 1))
+        megahit_cmd.append(str(max([(multiprocessing.cpu_count() - 1), 1])))
+
+        # set mem usage
+        # Note: this just sets the default value - 90% of available system memory allocated
+        # to the container. Exposing it here as a place to later expose as a parameter.
+        max_mem_percent = params.get('max_mem_percent', 0.9)
+        megahit_cmd.append('-m')
+        megahit_cmd.append(str(max_mem_percent))
 
         # set the output location
         timestamp = int((datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds() * 1000)
@@ -203,8 +215,8 @@ class MEGAHIT:
 
         print('Return code: ' + str(retcode))
         if p.returncode != 0:
-            raise ValueError('Error running MEGAHIT, return code: ' +
-                             str(retcode) + '\n')
+            error_str = report_megahit_error(output_dir, retcode)
+            raise RuntimeError(error_str)
 
         output_contigs = os.path.join(output_dir, 'final.contigs.fa')
 
@@ -245,9 +257,9 @@ class MEGAHIT:
         try:
             quastret = kbq.run_QUAST({'files': [{'path': output_contigs,
                                                  'label': params['output_contigset_name']}]})
-        except QUASTError as qe:
+        except ServerError as qe:
             # not really any way to test this, all inputs have been checked earlier and should be
-            # ok 
+            # ok
             print('Logging exception from running QUAST')
             print(str(qe))
             # TODO delete shock node
@@ -267,9 +279,9 @@ class MEGAHIT:
                  'report_object_name': 'kb_megahit_report_' + str(uuid.uuid4()),
                  'workspace_name': params['workspace_name']
                  })
-        except _RepError as re:
+        except ServerError as re:
             # not really any way to test this, all inputs have been checked earlier and should be
-            # ok 
+            # ok
             print('Logging exception from creating report object')
             print(str(re))
             # TODO delete shock node

@@ -1,5 +1,5 @@
-FROM kbase/kbase:sdkbase2.latest
-MAINTAINER KBase Developer [Dylan Chivian (DCChivian@lbl.gov)]
+FROM kbase/sdkbase2:python
+MAINTAINER KBase Team
 # -----------------------------------------
 
 # RUN apt-get update
@@ -7,11 +7,13 @@ RUN pip install --upgrade pip
 
 # Install MEGAHIT
 WORKDIR /kb/module
-RUN \
-  git clone https://github.com/voutcn/megahit.git && \
-  cd megahit && \
-  git checkout tags/v1.1.1 && \
-  make
+ARG filename=MEGAHIT-1.2.9-Linux-x86_64-static
+RUN cd /opt && \
+  curl -L -O https://github.com/voutcn/megahit/releases/download/v1.2.9/${filename}.tar.gz && \
+  tar -xvf ${filename}.tar.gz && \
+  rm ${filename}.tar.gz && \
+  ln -s /opt/${filename}/bin/megahit /usr/bin/megahit && \
+  chmod +x /usr/bin/megahit
 
 # copy local wrapper files, and build
 COPY ./ /kb/module
