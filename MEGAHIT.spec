@@ -26,12 +26,12 @@ module MEGAHIT {
 
     min_count - minimum multiplicity for filtering (k_min+1)-mers, default 2
 
-    min_k - minimum kmer size (<= 127), must be odd number, default 21
-    max_k - maximum kmer size (<= 127), must be odd number, default 99
-    k_step - increment of kmer size of each iteration (<= 28), must be even number, default 10
+    k_min - minimum kmer size (<= 255), must be odd number, defaults to 21
+    k_max - maximum kmer size (<= 255), must be odd number, defaults to 141
+    k_step - increment of kmer size of each iteration (<= 28), must be even number, defaults to 12
 
-    k_list - list of kmer size (all must be odd, in the range 15-127, increment <= 28);
-             override `--k-min', `--k-max' and `--k-step'
+    k_list - list of kmer sizes (all must be odd, in the range 15-255, increment <= 28);
+             override using `--k-min', `--k-max' and `--k-step'
 
     min_contig_length - minimum length of contigs to output, default is 2000
 

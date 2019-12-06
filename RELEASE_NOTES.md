@@ -1,3 +1,7 @@
+### Version 2.4.2
+__Fixed__
+- Corrected the min and max ranges for k_min, k_max, k_step, and k_list
+
 ### Version 2.4.1
 __Changes__
 - Upgrade Megahit to 1.2.9
