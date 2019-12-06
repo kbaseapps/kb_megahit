@@ -37,9 +37,9 @@ class MEGAHIT:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "2.4.0"
-    GIT_URL = "https://github.com/briehl/kb_megahit"
-    GIT_COMMIT_HASH = "c0264e2b3f9080055ac32f7d7fa58f9a2dbae574"
+    VERSION = "2.4.2"
+    GIT_URL = "https://github.com/kbaseapps/kb_megahit"
+    GIT_COMMIT_HASH = "527468881cdbd73a7f929253c03586de60a82f09"
 
     #BEGIN_CLASS_HEADER
     MEGAHIT = '/usr/bin/megahit'
@@ -72,14 +72,14 @@ class MEGAHIT:
 
     def run_megahit(self, ctx, params):
         """
-        :param params: instance of type "MegaHitParams" (Run MEGAHIT.  Most
+        :param params: instance of type "MegaHitParams" (Run MEGAHIT. Most
            parameters here are just passed forward to MEGAHIT workspace_name
            - the name of the workspace for input/output read_library_ref -
            the name of the PE read library (SE library support in the future)
            output_contig_set_name - the name of the output contigset
            megahit_parameter_preset - override a group of parameters;
            possible values: meta            '--min-count 2 --k-list
-           21,41,61,81,99' (generic metagenomes, default) meta-sensitive
+           21,41,61,81,99' (generic metagenomes, default) meta-sensitive 
            '--min-count 2 --k-list 21,31,41,51,61,71,81,91,99' (more
            sensitive but slower) meta-large      '--min-count 2 --k-list
            27,37,47,57,67,77,87' (large & complex metagenomes, like soil)
@@ -88,20 +88,21 @@ class MEGAHIT:
            single-cell     '--min-count 3 --k-list 21,33,55,77,99,121
            --merge_level 20,0.96' (experimental, single cell data) min_count
            - minimum multiplicity for filtering (k_min+1)-mers, default 2
-           min_k - minimum kmer size (<= 127), must be odd number, default 21
-           max_k - maximum kmer size (<= 127), must be odd number, default 99
-           k_step - increment of kmer size of each iteration (<= 28), must be
-           even number, default 10 k_list - list of kmer size (all must be
-           odd, in the range 15-127, increment <= 28); override `--k-min',
-           `--k-max' and `--k-step' min_contig_length - minimum length of
-           contigs to output, default is 2000 max_mem_percent - maximum
-           memory to make available to MEGAHIT, as a percentage of available
-           system memory (optional, default = 0.9 or 90%) @optional
-           megahit_parameter_preset @optional min_count @optional k_min
-           @optional k_max @optional k_step @optional k_list @optional
-           min_contig_length @optional max_mem_percent) -> structure:
-           parameter "workspace_name" of String, parameter "read_library_ref"
-           of String, parameter "output_contigset_name" of String, parameter
+           k_min - minimum kmer size (<= 255), must be odd number, defaults
+           to 21 k_max - maximum kmer size (<= 255), must be odd number,
+           defaults to 141 k_step - increment of kmer size of each iteration
+           (<= 28), must be even number, defaults to 12 k_list - list of kmer
+           sizes (all must be odd, in the range 15-255, increment <= 28);
+           override using `--k-min', `--k-max' and `--k-step'
+           min_contig_length - minimum length of contigs to output, default
+           is 2000 max_mem_percent - maximum memory to make available to
+           MEGAHIT, as a percentage of available system memory (optional,
+           default = 0.9 or 90%) @optional megahit_parameter_preset @optional
+           min_count @optional k_min @optional k_max @optional k_step
+           @optional k_list @optional min_contig_length @optional
+           max_mem_percent) -> structure: parameter "workspace_name" of
+           String, parameter "read_library_ref" of String, parameter
+           "output_contigset_name" of String, parameter
            "megahit_parameter_preset" of String, parameter "min_count" of
            Long, parameter "k_min" of Long, parameter "k_max" of Long,
            parameter "k_step" of Long, parameter "k_list" of list of Long,
