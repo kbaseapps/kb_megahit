@@ -46,7 +46,7 @@ parameters :
         short-hint : The maximum kmer size. Note that this number must bc less than or equal to 255 and odd; default is 141.
     k_step:
         ui-name : Increment k-mer size
-        short-hint : The increment of k-mer size of each iteration. Note that this number must be less than or equal to 28 and even; default is 12.
+        short-hint : The increment of k-mer size of each iteration. Note that this number must be less than or equal to 28 and even; default is 10.
     k_list:
         ui-name : List of k-mer sizes
         short-hint : The list of kmer sizes. Note that all values must be odd and in the range of 15-255; increment value must be less than or equal to 28.

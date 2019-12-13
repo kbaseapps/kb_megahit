@@ -39,7 +39,7 @@ class MEGAHIT:
     ######################################### noqa
     VERSION = "2.4.2"
     GIT_URL = "https://github.com/kbaseapps/kb_megahit"
-    GIT_COMMIT_HASH = "527468881cdbd73a7f929253c03586de60a82f09"
+    GIT_COMMIT_HASH = "dfbd3ad0467892b2b998796a02d4259fe7cc742f"
 
     #BEGIN_CLASS_HEADER
     MEGAHIT = '/usr/bin/megahit'
@@ -91,7 +91,7 @@ class MEGAHIT:
            k_min - minimum kmer size (<= 255), must be odd number, defaults
            to 21 k_max - maximum kmer size (<= 255), must be odd number,
            defaults to 141 k_step - increment of kmer size of each iteration
-           (<= 28), must be even number, defaults to 12 k_list - list of kmer
+           (<= 28), must be even number, defaults to 10 k_list - list of kmer
            sizes (all must be odd, in the range 15-255, increment <= 28);
            override using `--k-min', `--k-max' and `--k-step'
            min_contig_length - minimum length of contigs to output, default
