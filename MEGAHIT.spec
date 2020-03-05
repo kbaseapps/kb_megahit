@@ -28,7 +28,7 @@ module MEGAHIT {
 
     k_min - minimum kmer size (<= 255), must be odd number, defaults to 21
     k_max - maximum kmer size (<= 255), must be odd number, defaults to 141
-    k_step - increment of kmer size of each iteration (<= 28), must be even number, defaults to 12
+    k_step - increment of kmer size of each iteration (<= 28), must be even number, defaults to 10
 
     k_list - list of kmer sizes (all must be odd, in the range 15-255, increment <= 28);
              override using `--k-min', `--k-max' and `--k-step'
