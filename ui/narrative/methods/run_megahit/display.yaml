@@ -27,7 +27,7 @@ suggestions:
 #
 parameters :
     read_library_ref :
-        ui-name : Paired-End Eead library
+        ui-name : Paired-End Read library
         short-hint : Select a paired-end read library to assemble.
     output_contigset_name:
         ui-name : Output Assembly Name
