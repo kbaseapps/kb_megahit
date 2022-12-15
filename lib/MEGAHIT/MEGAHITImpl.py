@@ -19,6 +19,9 @@ from installed_clients.kb_quastClient import kb_quast
 
 from .error import report_megahit_error
 
+DEFAULT_MIN_CONTIG_LENGTH = 2000
+MINIMUM_MIN_CONTIG_LENGTH = 50  # Per KBase SME consensus on Slack
+
 #END_HEADER
 
 
@@ -52,8 +55,6 @@ class MEGAHIT:
         self.workspaceURL = config['workspace-url']
         self.scratch = os.path.abspath(config['scratch'])
         self.callbackURL = os.environ['SDK_CALLBACK_URL']
-
-        self.DEFAULT_MIN_CONTIG_LENGTH = 2000
 
         # HACK!! for issue where megahit fails on mac running docker because of
         # silent named pipe error in the volume mounted from mac
@@ -125,6 +126,17 @@ class MEGAHIT:
         if 'output_contigset_name' not in params:
             raise ValueError('output_contigset_name parameter is required')
 
+        min_contig_length = DEFAULT_MIN_CONTIG_LENGTH
+        if params.get('min_contig_length') is not None:
+            try:
+                min_contig_length = int(params['min_contig_length'])
+            except ValueError:
+                raise ValueError('min_contig_length parameter must be an integer >= '
+                                 + str(MINIMUM_MIN_CONTIG_LENGTH))
+            if min_contig_length < MINIMUM_MIN_CONTIG_LENGTH:
+                raise ValueError('min_contig_length parameter must be an integer >= '
+                                 + str(MINIMUM_MIN_CONTIG_LENGTH))
+
         # STEP 2: get the read library as deinterleaved fastq files
         input_ref = params['read_library_ref']
         reads_params = {'read_libraries': [input_ref],
@@ -179,14 +191,6 @@ class MEGAHIT:
                     k_list.append(str(k_val))
                 megahit_cmd.append('--k-list')
                 megahit_cmd.append(','.join(k_list))
-
-        min_contig_length = self.DEFAULT_MIN_CONTIG_LENGTH
-        if 'min_contig_length' in params:
-            if params['min_contig_length']:
-                if str(params['min_contig_length']).isdigit():
-                    min_contig_length = params['min_contig_length']
-                else:
-                    raise ValueError('min_contig_length parameter must be a non-negative integer')
 
         megahit_cmd.append('--min-contig-len')
         megahit_cmd.append(str(min_contig_length))
@@ -257,7 +261,8 @@ class MEGAHIT:
         kbq = kb_quast(self.callbackURL)
         try:
             quastret = kbq.run_QUAST({'files': [{'path': output_contigs,
-                                                 'label': params['output_contigset_name']}]})
+                                                 'label': params['output_contigset_name']}],
+                                      'min_contig_length': min_contig_length})
         except ServerError as qe:
             # not really any way to test this, all inputs have been checked earlier and should be
             # ok

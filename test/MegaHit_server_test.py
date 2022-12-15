@@ -11,6 +11,7 @@ from installed_clients.WorkspaceClient import Workspace as workspaceService
 from MEGAHIT.MEGAHITImpl import MEGAHIT
 from installed_clients.ReadsUtilsClient import ReadsUtils
 
+# TODO switch to pytest and ditch the class and self.assert*
 
 class MegaHitTest(unittest.TestCase):
 
@@ -165,6 +166,21 @@ class MegaHitTest(unittest.TestCase):
         self.assertEqual(contigset_info[1], 'trimmed.output.contigset')
         self.assertEqual(contigset_info[2].split('-')[0], 'KBaseGenomeAnnotations.Assembly')
         self.assertEqual(contigset_info[10]['Size'], '64794')
+
+    def test_run_megahit_with_bad_MCL(self):
+        params = {
+            'workspace_name': "fake",
+            'read_library_ref': "alsofake",
+            'output_contigset_name': "I, too, am fake",
+            'min_contig_length': None
+        }
+
+        for mcl in ["foo", 49, 10, 1, 0, -1, -100, -100000]:
+            with self.assertRaises(ValueError) as e:
+                params['min_contig_length'] = mcl
+                self.getImpl().run_megahit(self.getContext(), params)
+            self.assertEqual(
+                str(e.exception), "min_contig_length parameter must be an integer >= 50")
 
     @unittest.skip("Skipping OOM test")
     def test_run_megahit_oom_error(self):
