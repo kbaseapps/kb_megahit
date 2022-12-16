@@ -1,3 +1,8 @@
+### Version 2.4.3
+__Fixed__
+- The app now passes the min_contig_length to QUAST to prevent errors when the user specifies a
+  MCL < the QUAST default.
+
 ### Version 2.4.2
 __Fixed__
 - Corrected the min and max ranges for k_min, k_max, k_step, and k_list
